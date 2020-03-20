@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace Scene.Menu
 {
-    public class Settings : MonoBehaviour
+    public class Options : MonoBehaviour
     {
         public Button exitButton;
         public Toggle displayFpsToggle;

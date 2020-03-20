@@ -673,12 +673,12 @@ PrefabInstance:
     - target: {fileID: 2858633299782679263, guid: c1b3a756fd8e50a4ea056419dcb35db9,
         type: 3}
       propertyPath: m_Name
-      value: SettingsButton
+      value: OptionsButton
       objectReference: {fileID: 0}
     - target: {fileID: 2858633300958110585, guid: c1b3a756fd8e50a4ea056419dcb35db9,
         type: 3}
       propertyPath: m_Text
-      value: Settings
+      value: Options
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c1b3a756fd8e50a4ea056419dcb35db9, type: 3}
