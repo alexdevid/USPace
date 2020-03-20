@@ -2,35 +2,42 @@
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-namespace Scene.Menu
+namespace Scene.General
 {
-    public class MainMenu : MonoBehaviour
+    public class MainMenu : SceneController
     {
         public Button startButton;
-        public Button settingsButton;
+        public Button optionsButton;
         public Button exitButton;
+        public Button multiplayerButton;
 
         private void Start()
         {
             startButton.onClick.AddListener(OnStartClick);
-            settingsButton.onClick.AddListener(OnSettingsClick);
+            optionsButton.onClick.AddListener(OnSettingsClick);
             exitButton.onClick.AddListener(OnExitClick);
+            multiplayerButton.onClick.AddListener(OnMultiplayerClick);
         }
 
         private static void OnStartClick()
         {
-            SceneManager.LoadScene("WorldSelect");
+            SceneManager.LoadScene(WorldSelect);
         }
 
         private static void OnSettingsClick()
         {
-            SceneManager.LoadScene("MenuSettings");
+            SceneManager.LoadScene(Options);
         }
 
         private static void OnExitClick()
         {
             Debug.Log("BYE!");
             Application.Quit();
+        }
+
+        private static void OnMultiplayerClick()
+        {
+            Debug.Log("Multiplayer Not Enabled");
         }
     }
 }

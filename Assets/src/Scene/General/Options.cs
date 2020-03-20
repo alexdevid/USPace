@@ -1,12 +1,10 @@
-﻿using System.Linq;
-using UnityEngine;
-using UnityEngine.Events;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-namespace Scene.Menu
+namespace Scene.General
 {
-    public class Options : MonoBehaviour
+    public class Options : SceneController
     {
         public Button exitButton;
         public Toggle displayFpsToggle;
@@ -54,7 +52,7 @@ namespace Scene.Menu
         
         private static void OnExitClick()
         {
-            SceneManager.LoadScene("MenuMainMenu");
+            SceneManager.LoadScene(MainMenu);
         }
     }
 }
