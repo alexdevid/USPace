@@ -24,7 +24,7 @@ namespace Scene
             closeMenuButton.onClick.AddListener(() => ToggleMenuOverlay(false));
             exitButton.onClick.AddListener(OnExitButtonClick);
 
-            if (ConfigManager.GetBool(ConfigName.SettingsDisplayFps))
+            if (ConfigManager.GetBool(ConfigManager.Name.SettingsDisplayFps))
             {
                 gameObject.AddComponent<DebugOverlay>();
             }

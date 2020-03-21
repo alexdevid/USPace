@@ -176,7 +176,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Exp: 210304; Planets: 13; Tech: 56'
+  m_Text: 
 --- !u!1 &2082712201800023784
 GameObject:
   m_ObjectHideFlags: 0
@@ -253,7 +253,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: June 12 2021
+  m_Text: 
 --- !u!1 &4272966485733193753
 GameObject:
   m_ObjectHideFlags: 0
@@ -330,7 +330,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: New Universe 1
+  m_Text: 
 --- !u!1 &4272966486707233185
 GameObject:
   m_ObjectHideFlags: 0
@@ -468,5 +468,4 @@ MonoBehaviour:
   levelName: {fileID: 4272966485733193735}
   date: {fileID: 2082712201800023782}
   stats: {fileID: 2082712201322070969}
-  playButton: {fileID: 0}
   preview: {fileID: 2082712200197986165}

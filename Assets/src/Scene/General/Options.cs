@@ -24,7 +24,7 @@ namespace Scene.General
         private void InitSettingsGui()
         {
             fullScreenToggle.isOn = Screen.fullScreen;
-            displayFpsToggle.isOn = ConfigManager.GetBool(ConfigName.SettingsDisplayFps);
+            displayFpsToggle.isOn = ConfigManager.GetBool(ConfigManager.Name.SettingsDisplayFps);
             
             foreach (Resolution resolution in Screen.resolutions)
             {
@@ -47,7 +47,7 @@ namespace Scene.General
         
         private static void OnDisplayFpsToggle(bool value)
         {
-            ConfigManager.Store(ConfigName.SettingsDisplayFps, value);
+            ConfigManager.Store(ConfigManager.Name.SettingsDisplayFps, value);
         }
         
         private static void OnExitClick()

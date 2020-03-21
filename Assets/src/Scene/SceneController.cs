@@ -6,6 +6,6 @@ namespace Scene
     {
         public const string MainMenu = "general_main_menu";
         public const string Options = "general_options";
-        public const string WorldSelect = "general_world_select";
+        public const string WorldSelect = "single_world_select";
     }
 }

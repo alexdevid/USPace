@@ -2,44 +2,49 @@
 
 namespace Storage
 {
-    public class LocalDataStorage : IDataStorage
+    public static class LocalStorage
     {
-        public void Store(StorageKey key, int value)
+        public enum Key
+        {
+            Levels
+        }
+        
+        public static void Store(LocalStorage.Key key, int value)
         {
             PlayerPrefs.SetInt(key.ToString(), value);
         }
 
-        public void Store(StorageKey key, bool value)
+        public static void Store(LocalStorage.Key key, bool value)
         {
             PlayerPrefs.SetInt(key.ToString(), value ? 1 : 0);
         }
 
-        public void Store(StorageKey key, float value)
+        public static void Store(LocalStorage.Key key, float value)
         {
             PlayerPrefs.SetFloat(key.ToString(), value);
         }
 
-        public void Store(StorageKey key, string value)
+        public static void Store(LocalStorage.Key key, string value)
         {
             PlayerPrefs.SetString(key.ToString(), value);
         }
 
-        public int GetInt(StorageKey key)
+        public static int GetInt(LocalStorage.Key key)
         {
             return PlayerPrefs.GetInt(key.ToString());
         }
 
-        public bool GetBool(StorageKey key)
+        public static bool GetBool(LocalStorage.Key key)
         {
             return PlayerPrefs.GetInt(key.ToString()) == 1;
         }
 
-        public float GetFloat(StorageKey key)
+        public static float GetFloat(LocalStorage.Key key)
         {
             return PlayerPrefs.GetFloat(key.ToString());
         }
 
-        public string GetString(StorageKey key)
+        public static string GetString(LocalStorage.Key key)
         {
             return PlayerPrefs.GetString(key.ToString());
         }
