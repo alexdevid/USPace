@@ -4,10 +4,11 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Image = UnityEngine.UI.Image;
 
 namespace UI.SinglePlayer
 {
-    public class LevelSelector : MonoBehaviour
+    public class LevelSelector : MonoBehaviour, IPointerClickHandler
     {
         public Text levelName;
         public Text date;
@@ -17,21 +18,22 @@ namespace UI.SinglePlayer
 
         private Level _level;
 
-        public readonly UnityEvent MouseDownEvent = new UnityEvent();
+        public readonly UnityEvent MouseClickEvent = new UnityEvent();
+        public readonly UnityEvent MouseDoubleClickEvent = new UnityEvent();
 
         private void Update()
         {
-            if (_level != null) levelName.text = _level.GetName();
+            if (_level != null && levelName.text.Length == 0) levelName.text = _level.Name;
+            if (_level != null && date.text.Length == 0) date.text = $"Created: {_level.StartTime.ToString()}";
+            if (_level != null && stats.text.Length == 0) stats.text = $"Universe age: {(DateTimeOffset.FromUnixTimeSeconds(_level.GetLevelAge())).ToString()}";
         }
-
-        private void Start()
+        
+        public void OnPointerClick(PointerEventData eventData)
         {
-            GetComponent<Button>().onClick.AddListener(OnMouseDown);
-        }
-
-        private void OnMouseDown()
-        {
-            MouseDownEvent.Invoke();
+            if (eventData.clickCount == 2)
+                MouseDoubleClickEvent.Invoke();
+            else
+                MouseClickEvent.Invoke();
         }
 
         public void SetSelected(bool selected)

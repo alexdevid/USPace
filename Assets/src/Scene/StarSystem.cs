@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace Scene
 {
-    public class Game : SceneController
+    public class StarSystem : SceneController
     {
         public Button menuButton;
         public Button closeMenuButton;

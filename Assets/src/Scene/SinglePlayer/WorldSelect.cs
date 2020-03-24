@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Model;
-using Service;
 using UI.SinglePlayer;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -42,13 +40,10 @@ namespace Scene.SinglePlayer
             System.Random rand = new System.Random();
             int seed = rand.Next(int.MinValue, int.MaxValue);
 
-            Level level = LevelManager.CreateLevel(seed);
-            level.SetName($"New Universe {level.GetId()}");
-
-            LevelManager.SaveLevel(level);
-            LevelManager.Store();
+            Level level = Game.App.LevelManager.CreateLevel(seed);
+            level.Name = $"New Universe {level.Id}";
+            Game.App.LevelManager.Store();
             
-            Runtime.Level = level;
             SceneManager.LoadScene(GameSystem);
         }
 
@@ -66,8 +61,10 @@ namespace Scene.SinglePlayer
 
         private void OnDeleteClick()
         {
-            LevelManager.DeleteLevel(_selectedLevel);
-            LevelSelector levelSelectorToDelete = GetLevelSelectorByLevelId(_selectedLevel.GetId());
+            Game.App.LevelManager.DeleteLevel(_selectedLevel);
+            Game.App.LevelManager.Store();
+            
+            LevelSelector levelSelectorToDelete = GetLevelSelectorByLevelId(_selectedLevel.Id);
             _levelSelectors.Remove(levelSelectorToDelete);
             
             _selectedLevel = null;
@@ -76,7 +73,6 @@ namespace Scene.SinglePlayer
 
         private void OnPlayClick()
         {
-            Runtime.Level = _selectedLevel;
             SceneManager.LoadScene(GameSystem);
         }
         
@@ -87,16 +83,21 @@ namespace Scene.SinglePlayer
 
         private LevelSelector GetLevelSelectorByLevelId(int id)
         {
-            return _levelSelectors.Find(levelSelectorComponent => levelSelectorComponent.GetLevel().GetId() == id);
+            return _levelSelectors.Find(levelSelectorComponent => levelSelectorComponent.GetLevel().Id == id);
         }
         
         private void CreateLevelSelectors()
         {
-            foreach (Level level in LevelManager.GetLevels())
+            foreach (Level level in Game.App.LevelManager.Levels)
             {
                 GameObject levelObject = Instantiate(levelSelector, levelContainer);
                 LevelSelector levelSelectorComponent = levelObject.GetComponent<LevelSelector>();
-                levelSelectorComponent.MouseDownEvent.AddListener(() => OnLevelSelected(levelSelectorComponent));
+                levelSelectorComponent.MouseClickEvent.AddListener(() => OnLevelSelected(levelSelectorComponent));
+                levelSelectorComponent.MouseDoubleClickEvent.AddListener(() =>
+                {
+                    OnLevelSelected(levelSelectorComponent);
+                    OnPlayClick();
+                });
                 levelSelectorComponent.SetLevel(level);
                 
                 _levelSelectors.Add(levelSelectorComponent);

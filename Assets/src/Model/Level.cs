@@ -1,43 +1,30 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Model
 {
-    [System.Serializable]
+    [Serializable]
     public class Level
     {
-        [SerializeField]
-        private int _seed;
-        
-        [SerializeField]
-        private string _name;
+        [SerializeField] private int id;
+        [SerializeField] private int seed;
+        [SerializeField] private long startTime;
 
-        [SerializeField]
-        private int _id;
+        public int Id => id;
+        public int Seed => seed;
+        public long StartTime => startTime;
+        public string Name { get; set; }
 
         public Level(int id, int seed)
         {
-            _id = id;
-            _seed = seed;
-        }
-        
-        public static Level FromJson(string json)
-        {
-            return JsonUtility.FromJson<Level>(json);
+            this.id = id;
+            this.seed = seed;
+            startTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         }
 
-        public int GetId()
+        public long GetLevelAge()
         {
-            return _id;
-        }
-
-        public string GetName()
-        {
-            return _name;
-        }
-
-        public void SetName(string name)
-        {
-            _name = name;
+            return DateTimeOffset.UtcNow.ToUnixTimeSeconds() - startTime;
         }
     }
 }
