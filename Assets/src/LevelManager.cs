@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Model;
 using Storage;
 using UnityEngine;
@@ -8,7 +9,7 @@ using Random = UnityEngine.Random;
 [Serializable]
 public class LevelManager
 {
-    [SerializeField] private List<Level> levels;
+    [SerializeField] private List<Level> levels = new List<Level>();
     public List<Level> Levels => levels;
 
     public Level CreateLevel(int seed)
@@ -22,6 +23,11 @@ public class LevelManager
     public void DeleteLevel(Level level)
     {
         levels.Remove(level);
+    }
+
+    public Level GetCurrentLevel()
+    {
+        return levels.First();
     }
 
     public void Store()
@@ -44,7 +50,7 @@ public class LevelManager
     public static LevelManager Load()
     {
         string json = LocalStorage.GetString(LocalStorage.Key.Levels);
-        Debug.Log(json);
+
         return json.Length > 0 ? JsonUtility.FromJson<LevelManager>(json) : new LevelManager();
     }
 

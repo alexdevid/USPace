@@ -1,10 +1,11 @@
-﻿using UnityEngine;
+﻿using Model;
 
 public class Game
 {
     private static Game _app = new Game();
 
     public LevelManager LevelManager { get; } = LevelManager.Load();
+    public Player Player { get; }
 
     public static Game App
     {
@@ -17,6 +18,6 @@ public class Game
     
     private Game()
     {
-        Debug.Log("INST GAME");
+        Player = new Player();
     }
 }

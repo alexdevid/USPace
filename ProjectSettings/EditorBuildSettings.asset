@@ -15,9 +15,6 @@ EditorBuildSettings:
     path: Assets/scenes/single_world_select.unity
     guid: 533ffafcd9cd88c43a662e5a85efda4e
   - enabled: 1
-    path: Assets/scenes/single_world_create.unity
-    guid: ea67a1ed3cec7024bae6db475cea5a62
-  - enabled: 1
     path: Assets/scenes/game_system.unity
     guid: 38409a4d5153f4143b9b047a3b6840a2
   m_configObjects: {}

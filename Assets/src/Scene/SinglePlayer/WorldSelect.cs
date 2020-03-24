@@ -1,9 +1,12 @@
 ﻿using System.Collections.Generic;
+using Generator;
 using Model;
+using UI.General;
 using UI.SinglePlayer;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityPackages;
 
 namespace Scene.SinglePlayer
 {
@@ -13,8 +16,10 @@ namespace Scene.SinglePlayer
         public Button backButton;
         public Button playButton;
         public Button deleteButton;
-        public GameObject levelSelector;
         public Transform levelContainer;
+        public Preloader preloader;
+        public GameObject levelSelector;
+        public GameObject loadingScreen;
 
         private Level _selectedLevel;
         private readonly List<LevelSelector> _levelSelectors = new List<LevelSelector>();
@@ -26,6 +31,7 @@ namespace Scene.SinglePlayer
             playButton.onClick.AddListener(OnPlayClick);
             deleteButton.onClick.AddListener(OnDeleteClick);
 
+            loadingScreen.SetActive(false);
             CreateLevelSelectors();
         }
 
@@ -33,18 +39,24 @@ namespace Scene.SinglePlayer
         {
             playButton.interactable = _selectedLevel != null;
             deleteButton.interactable = _selectedLevel != null;
+            preloader.value = WorldGenerator.GenerationProgress;
         }
 
         private void OnCreateClick()
         {
-            System.Random rand = new System.Random();
-            int seed = rand.Next(int.MinValue, int.MaxValue);
-
-            Level level = Game.App.LevelManager.CreateLevel(seed);
+            Level level = Game.App.LevelManager.CreateLevel(WorldGenerator.WorldSeed);
             level.Name = $"New Universe {level.Id}";
             Game.App.LevelManager.Store();
             
-            SceneManager.LoadScene(GameSystem);
+            WorldGenerator generator = new WorldGenerator();
+            Promise<bool> generatorOperation = generator.Generate();
+            loadingScreen.SetActive(true);
+            preloader.max = WorldGenerator.StarSystemsCount;
+            
+            generatorOperation.Then(generated =>
+            {
+                SceneManager.LoadScene(GameSystem);
+            });
         }
 
         private void OnLevelSelected(LevelSelector selector)
@@ -71,7 +83,7 @@ namespace Scene.SinglePlayer
             Destroy(levelSelectorToDelete.gameObject);
         }
 
-        private void OnPlayClick()
+        private static void OnPlayClick()
         {
             SceneManager.LoadScene(GameSystem);
         }

@@ -1,24 +1,21 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Model
 {
+    [Serializable]
     public class StarSystem
     {
-        public readonly string Name;
-        public readonly Vector2 Location;
-        private Sector _sector;
+        [SerializeField] private string name;
+        [SerializeField] private Vector2 location;
 
-        public StarSystem(string name, Sector sector, Vector2 location)
-        {
-            Name = name;
-            Location = location;
-            
-            _sector = sector;
-        }
+        public string Name => name;
+        public Vector2 Location => location;
 
-        public override string ToString()
+        public StarSystem(string name, Vector2 location)
         {
-            return $"{Name} [{Location.x}, {Location.y}]";
+            this.name = name;
+            this.location = location;
         }
     }
 }
