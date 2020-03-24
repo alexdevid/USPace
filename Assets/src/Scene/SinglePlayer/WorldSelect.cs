@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Generator;
 using Model;
 using UI.General;
@@ -39,7 +40,6 @@ namespace Scene.SinglePlayer
         {
             playButton.interactable = _selectedLevel != null;
             deleteButton.interactable = _selectedLevel != null;
-            preloader.value = WorldGenerator.GenerationProgress;
         }
 
         private void OnCreateClick()
@@ -48,12 +48,9 @@ namespace Scene.SinglePlayer
             level.Name = $"New Universe {level.Id}";
             Game.App.LevelManager.Store();
             
-            WorldGenerator generator = new WorldGenerator();
-            Promise<bool> generatorOperation = generator.Generate();
             loadingScreen.SetActive(true);
             preloader.max = WorldGenerator.StarSystemsCount;
-            
-            generatorOperation.Then(generated =>
+            WorldGenerator.Generate().Then(generated =>
             {
                 SceneManager.LoadScene(GameSystem);
             });

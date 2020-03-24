@@ -1,56 +1,68 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using Model;
+using Model.Space;
+using Model.Space.Dictionary;
 using UnityEngine;
 using UnityPackages;
 using Random = UnityEngine.Random;
 
 namespace Generator
 {
-    public class WorldGenerator
+    public static class WorldGenerator
     {
-        public const int StarSystemsCount = 500000;
         public const int WorldSeed = 393108462;
-        
-        private readonly List<StarSystem> _starSystems = new List<StarSystem>();
-        
-        public static int GenerationProgress = 0;
+        public const int StarSystemsCount = 500000;
 
-        public Promise<bool> Generate()
+        private const string StarSystemPrefix = "USC";
+
+        public static Promise<bool> Generate()
         {
-            // Very important part. Be careful!
-            Random.InitState(WorldSeed);
-            
             Level level = Game.App.LevelManager.GetCurrentLevel();
-            Player player = Game.App.Player;
-            
-            Promise<bool> promise = new Promise<bool> ((resolve, reject) => {
-                
-                for (int i = 0; i < StarSystemsCount; i++)
-                {
-                    float halfSize = GetUniverseSize() / 2;
-                    float x = Random.Range(-halfSize, halfSize);
-                    float y = Random.Range(-halfSize, halfSize);
-                    
-                    StarSystem system = new StarSystem($"SG-{x}.{y}", new Vector2(x, y));
-                    _starSystems.Add(system);
-                    
-                    GenerationProgress++;
-                }
-                resolve(true);
-            });
-            
+            Random.InitState(level.Seed);
 
-            return promise;
+            return new Promise<bool>(GenerateSystems);
+        }
+
+        private static void GenerateSystems(Action<bool> resolve, Action<string> reject)
+        {
+            for (int i = 0; i < StarSystemsCount; i++)
+            {
+                GenerateSystem();
+            }
+
+            resolve(true);
+        }
+
+        private static StarSystem GenerateSystem()
+        {
+            Vector2 location = GenerateSystemLocation();
+            StarSystem system = new StarSystem(GenerateSystemName(location), location);
+
+            return system;
+        }
+
+        private static string GenerateSystemName(Vector2 location)
+        {
+            return $"{StarSystemPrefix}-{location.x}.{location.y}";
+        }
+
+        private static string GenerateSystemType(Vector2 location)
+        {
+            return "";
+        }
+
+        private static Vector2 GenerateSystemLocation()
+        {
+            float halfSize = GetUniverseSize() / 2;
+            float x = Random.Range(-halfSize, halfSize);
+            float y = Random.Range(-halfSize, halfSize);
+
+            return new Vector2(x, y);
         }
 
         private static float GetUniverseSize()
         {
             return 50000 * 2.387f;
-        }
-
-        public List<StarSystem> GetStarSystems()
-        {
-            return _starSystems;
         }
     }
 }

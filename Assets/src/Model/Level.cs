@@ -9,7 +9,7 @@ namespace Model
         [SerializeField] private int id;
         [SerializeField] private int seed;
         [SerializeField] private long startTime;
-
+        
         public int Id => id;
         public int Seed => seed;
         public long StartTime => startTime;
