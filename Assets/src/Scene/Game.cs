@@ -1,43 +1,45 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Scene
 {
-    public class Game : MonoBehaviour
+    public class Game : SceneController
     {
-        public Camera gameCamera;
         public Button menuButton;
         public Button closeMenuButton;
         public Button exitButton;
         public GameObject menuPanel;
         
-        public const float GameScreenSize = 1000;
+        public const float GameScreenSize = 10000;
+        private CameraDrag _cameraDrag;
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Escape)) ToggleMenuOverlay();
+        }
 
         private void Start()
         {
-            ToggleMenuOverlay(false);
-
-            gameObject.AddComponent<CameraDrag>().mainCamera = gameCamera;
+            if (Camera.main == null) throw new Exception("Add `MainCamera` tag to main camera");
             
-            menuButton.onClick.AddListener(() => ToggleMenuOverlay(true));
-            closeMenuButton.onClick.AddListener(() => ToggleMenuOverlay(false));
+            _cameraDrag = Camera.main.GetComponent<CameraDrag>();
+            
+            menuButton.onClick.AddListener(ToggleMenuOverlay);
+            closeMenuButton.onClick.AddListener(ToggleMenuOverlay);
             exitButton.onClick.AddListener(OnExitButtonClick);
-
-            if (ConfigManager.GetBool(ConfigManager.Name.SettingsDisplayFps))
-            {
-                gameObject.AddComponent<DebugOverlay>();
-            }
         }
 
         private static void OnExitButtonClick()
         {
-            SceneManager.LoadSceneAsync("MenuMainMenu");
+            SceneManager.LoadSceneAsync(MainMenu);
         }
         
-        private void ToggleMenuOverlay(bool visible)
+        private void ToggleMenuOverlay()
         {
-            menuPanel.SetActive(visible);
+            menuPanel.SetActive(!menuPanel.activeSelf);
+            _cameraDrag.interactive = !menuPanel.activeSelf;
         }
     }
 }
