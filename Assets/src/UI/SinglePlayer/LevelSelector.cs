@@ -15,17 +15,22 @@ namespace UI.SinglePlayer
         public Text stats;
         public Image preview;
         public Image background;
-
-        private Level _level;
+        
+        public Level Level { get; set; }
 
         public readonly UnityEvent MouseClickEvent = new UnityEvent();
         public readonly UnityEvent MouseDoubleClickEvent = new UnityEvent();
 
+        private void Start()
+        {
+            SetSelected(false);
+        }
+
         private void Update()
         {
-            if (_level != null && levelName.text.Length == 0) levelName.text = _level.Name;
-            if (_level != null && date.text.Length == 0) date.text = $"Created: {_level.StartTime.ToString()}";
-            if (_level != null && stats.text.Length == 0) stats.text = $"Universe age: {(DateTimeOffset.FromUnixTimeSeconds(_level.GetLevelAge())).ToString()}";
+            if (Level != null && levelName.text.Length == 0) levelName.text = Level.Name;
+            if (Level != null && date.text.Length == 0) date.text = $"Created: {Level.GetStartDateString()}";
+            if (Level != null && stats.text.Length == 0) stats.text = $"Age: {Level.GetLevelAgeString()}";
         }
         
         public void OnPointerClick(PointerEventData eventData)
@@ -44,16 +49,6 @@ namespace UI.SinglePlayer
             color.a = alpha;
             
             background.color = color;
-        }
-
-        public void SetLevel(Level level)
-        {
-            _level = level;
-        }
-
-        public Level GetLevel()
-        {
-            return _level;
         }
     }
 }

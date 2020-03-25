@@ -17,22 +17,30 @@ namespace Scene.SinglePlayer
         public Button backButton;
         public Button playButton;
         public Button deleteButton;
+        public Button showCreateOverlayButton;
+        public Button hideCreateOverlayButton;
         public Transform levelContainer;
         public Preloader preloader;
         public GameObject levelSelector;
         public GameObject loadingScreen;
+        public GameObject createOverlay;
+        public InputField levelNameInput;
 
         private Level _selectedLevel;
         private readonly List<LevelSelector> _levelSelectors = new List<LevelSelector>();
-        
+
         private void Start()
         {
-            createButton.onClick.AddListener(OnCreateClick);
             backButton.onClick.AddListener(OnBackClick);
             playButton.onClick.AddListener(OnPlayClick);
+            playButton.onClick.AddListener(OnPlayClick);
             deleteButton.onClick.AddListener(OnDeleteClick);
+            createButton.onClick.AddListener(OnCreateClick);
+            showCreateOverlayButton.onClick.AddListener(OnCreateOverlayClick);
+            hideCreateOverlayButton.onClick.AddListener(OnHideOverlayClick);
 
             loadingScreen.SetActive(false);
+            createOverlay.SetActive(false);
             CreateLevelSelectors();
         }
 
@@ -42,40 +50,43 @@ namespace Scene.SinglePlayer
             deleteButton.interactable = _selectedLevel != null;
         }
 
+        private void OnHideOverlayClick()
+        {
+            createOverlay.SetActive(false);
+        }
+
+        private void OnCreateOverlayClick()
+        {
+            createOverlay.SetActive(true);
+        }
+
         private void OnCreateClick()
         {
-            Level level = Game.App.LevelManager.CreateLevel(WorldGenerator.WorldSeed);
-            level.Name = $"New Universe {level.Id}";
+            string levelName = levelNameInput.text ?? "new universe";
+            Level level = Game.App.LevelManager.CreateLevel(WorldGenerator.WorldSeed, levelName);
             Game.App.LevelManager.Store();
             
             loadingScreen.SetActive(true);
             preloader.max = WorldGenerator.StarSystemsCount;
-            WorldGenerator.Generate().Then(generated =>
-            {
-                SceneManager.LoadScene(GameSystem);
-            });
+            WorldGenerator.Generate().Then(generated => { SceneManager.LoadScene(GameSystem); });
         }
 
         private void OnLevelSelected(LevelSelector selector)
         {
-            _levelSelectors.ForEach(levelSelectorComponent =>
-            {
-                levelSelectorComponent.SetSelected(false);
-            });
-            
+            _levelSelectors.ForEach(levelSelectorComponent => { levelSelectorComponent.SetSelected(false); });
+
             selector.SetSelected(true);
-            _selectedLevel = selector.GetLevel();
-            
+            _selectedLevel = selector.Level;
         }
 
         private void OnDeleteClick()
         {
             Game.App.LevelManager.DeleteLevel(_selectedLevel);
             Game.App.LevelManager.Store();
-            
+
             LevelSelector levelSelectorToDelete = GetLevelSelectorByLevelId(_selectedLevel.Id);
             _levelSelectors.Remove(levelSelectorToDelete);
-            
+
             _selectedLevel = null;
             Destroy(levelSelectorToDelete.gameObject);
         }
@@ -84,7 +95,7 @@ namespace Scene.SinglePlayer
         {
             SceneManager.LoadScene(GameSystem);
         }
-        
+
         private static void OnBackClick()
         {
             SceneManager.LoadScene(MainMenu);
@@ -92,9 +103,9 @@ namespace Scene.SinglePlayer
 
         private LevelSelector GetLevelSelectorByLevelId(int id)
         {
-            return _levelSelectors.Find(levelSelectorComponent => levelSelectorComponent.GetLevel().Id == id);
+            return _levelSelectors.Find(levelSelectorComponent => levelSelectorComponent.Level.Id == id);
         }
-        
+
         private void CreateLevelSelectors()
         {
             foreach (Level level in Game.App.LevelManager.Levels)
@@ -107,8 +118,8 @@ namespace Scene.SinglePlayer
                     OnLevelSelected(levelSelectorComponent);
                     OnPlayClick();
                 });
-                levelSelectorComponent.SetLevel(level);
-                
+                levelSelectorComponent.Level = level;
+
                 _levelSelectors.Add(levelSelectorComponent);
             }
         }

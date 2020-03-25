@@ -12,9 +12,10 @@ public class LevelManager
     [SerializeField] private List<Level> levels = new List<Level>();
     public List<Level> Levels => levels;
 
-    public Level CreateLevel(int seed)
+    public Level CreateLevel(int seed, string name)
     {
-        Level level = new Level(GetRandomLevelId(), seed);
+        int id = GetRandomLevelId();
+        Level level = new Level(id, seed, name);
         levels.Add(level);
 
         return level;
@@ -50,7 +51,7 @@ public class LevelManager
     public static LevelManager Load()
     {
         string json = LocalStorage.GetString(LocalStorage.Key.Levels);
-
+        Debug.Log(json);
         return json.Length > 0 ? JsonUtility.FromJson<LevelManager>(json) : new LevelManager();
     }
 
