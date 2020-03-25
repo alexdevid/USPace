@@ -11,17 +11,20 @@ namespace Model.Space
         [SerializeField] private string name;
         [SerializeField] private string publicName;
         [SerializeField] private Vector2 location;
+        [SerializeField] private StarSystemType type;
 
         public string Name => name;
         public Vector2 Location => location;
+        public StarSystemType Type => type;
 
-        public StarSystem(string name, Vector2 location)
+        public StarSystem(string name, Vector2 location, StarSystemType type)
         {
             this.name = name;
             this.location = location;
+            this.type = type;
             
-            publicName = name;
             id = $"{location.x}{location.y}";
+            publicName = name;
         }
     }
 }

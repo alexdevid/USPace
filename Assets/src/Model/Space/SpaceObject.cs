@@ -1,14 +1,24 @@
-﻿namespace Model.Space
-{
-    public abstract class Object
-    {
-        readonly int Id;
-        readonly string Name;
+﻿using System;
+using UnityEngine;
 
-        Object(int id, string name)
+namespace Model.Space
+{
+    [Serializable]
+    public abstract class SpaceObject
+    {
+        [SerializeField] private int id;
+        [SerializeField] private string name;
+        [SerializeField] private Vector2 position;
+
+        public int Id => id;
+        public string Name => name;
+        public Vector2 Position => position;
+
+        public SpaceObject(int id, string name, Vector2 position)
         {
-            Id = id;
-            Name = name;
+            this.id = id;
+            this.name = name;
+            this.position = position;
         }
     }
 }

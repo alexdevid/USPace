@@ -62,12 +62,15 @@ namespace Scene.SinglePlayer
 
         private void OnCreateClick()
         {
-            string levelName = levelNameInput.text ?? "new universe";
+            preloader.max = WorldGenerator.StarSystemsCount;
+            createOverlay.SetActive(false);
+            loadingScreen.SetActive(true);
+            
+            string inputValue = levelNameInput.text;
+            string levelName = inputValue.Length > 0 ? inputValue : "new universe";
             Level level = Game.App.LevelManager.CreateLevel(WorldGenerator.WorldSeed, levelName);
             Game.App.LevelManager.Store();
             
-            loadingScreen.SetActive(true);
-            preloader.max = WorldGenerator.StarSystemsCount;
             WorldGenerator.Generate().Then(generated => { SceneManager.LoadScene(GameSystem); });
         }
 
