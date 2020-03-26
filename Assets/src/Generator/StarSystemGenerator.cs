@@ -1,6 +1,9 @@
-﻿using Model.Space;
+﻿using System;
+using Model.Space;
 using Model.Space.Dictionary;
 using UnityEngine;
+using UnityPackages;
+using Random = UnityEngine.Random;
 
 namespace Generator
 {
@@ -8,11 +11,13 @@ namespace Generator
     {
         private const string StarSystemPrefix = "USC";
         
-        public static StarSystem Generate(Vector2 location)
+        public static Promise<StarSystem> Generate(Vector2 location)
         {
-            StarSystem system = new StarSystem(GenerateName(location), location, GenerateType());
-            
-            return system;
+            return new Promise<StarSystem>((resolve, reject) =>
+            {
+                StarSystem system = new StarSystem(GenerateName(location), location, GenerateType());
+                resolve(system);
+            });
         }
         
         private static string GenerateName(Vector2 location)

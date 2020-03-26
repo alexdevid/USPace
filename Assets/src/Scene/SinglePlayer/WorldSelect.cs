@@ -31,6 +31,8 @@ namespace Scene.SinglePlayer
 
         private void Start()
         {
+            levelNameInput.text = "new universe";
+
             backButton.onClick.AddListener(OnBackClick);
             playButton.onClick.AddListener(OnPlayClick);
             playButton.onClick.AddListener(OnPlayClick);
@@ -42,6 +44,11 @@ namespace Scene.SinglePlayer
             loadingScreen.SetActive(false);
             createOverlay.SetActive(false);
             CreateLevelSelectors();
+        }
+
+        private void Update()
+        {
+            Debug.Log(WorldGenerator.Counter);
         }
 
         private void OnGUI()
@@ -65,13 +72,12 @@ namespace Scene.SinglePlayer
             preloader.max = WorldGenerator.StarSystemsCount;
             createOverlay.SetActive(false);
             loadingScreen.SetActive(true);
-            
-            string inputValue = levelNameInput.text;
-            string levelName = inputValue.Length > 0 ? inputValue : "new universe";
-            Level level = Game.App.LevelManager.CreateLevel(WorldGenerator.WorldSeed, levelName);
+
+            Game.App.LevelManager.CreateLevel(WorldGenerator.WorldSeed, levelNameInput.text);
             Game.App.LevelManager.Store();
-            
-            WorldGenerator.Generate().Then(generated => { SceneManager.LoadScene(GameSystem); });
+
+            // WorldGenerator.Generate().Then(generated => { SceneManager.LoadScene(GameSystem); });
+            WorldGenerator.Generate();
         }
 
         private void OnLevelSelected(LevelSelector selector)

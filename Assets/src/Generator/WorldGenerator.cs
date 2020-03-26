@@ -1,5 +1,6 @@
 ﻿using System;
 using Model;
+using Model.Space;
 using UnityEngine;
 using UnityPackages;
 using Random = UnityEngine.Random;
@@ -10,21 +11,40 @@ namespace Generator
     {
         public const int WorldSeed = 393108462;
         public const int StarSystemsCount = 100000;
+        public static int Counter = 0;
 
-        public static Promise<bool> Generate()
+        // public static Promise<bool> Generate()
+        // {
+        //     return new Promise<bool>(GenerateSystems);
+        // }
+
+        public static void Generate()
         {
-            return new Promise<bool>(GenerateSystems);
+            Level level = Game.App.LevelManager.GetCurrentLevel();
+            Random.InitState(level.Seed);
+
+            for (int i = 0; i < StarSystemsCount; i++)
+            {
+                StarSystemGenerator
+                    .Generate(GenerateSystemLocation())
+                    .Then(system =>
+                    {
+                        Debug.Log(system.Name);
+                        Counter++;
+                    });
+            }
         }
 
         private static void GenerateSystems(Action<bool> resolve, Action<string> reject)
         {
             Level level = Game.App.LevelManager.GetCurrentLevel();
             Random.InitState(level.Seed);
-            
+
             for (int i = 0; i < StarSystemsCount; i++)
             {
-                var system = StarSystemGenerator.Generate(GenerateSystemLocation());
-                Debug.Log(system.Type);
+                StarSystemGenerator
+                    .Generate(GenerateSystemLocation())
+                    .Then(system => { Debug.Log(system.Name); });
             }
 
             resolve(true);
