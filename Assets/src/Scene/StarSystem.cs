@@ -1,4 +1,5 @@
 ﻿using System;
+using Model;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -14,6 +15,12 @@ namespace Scene
         
         public const float GameScreenSize = 10000;
         private CameraDrag _cameraDrag;
+        private Model.Space.StarSystem _starSystem;
+
+        private void Awake()
+        {
+            Debug.Log(Game.App.CurrentStarSystem.Name);
+        }
 
         private void Update()
         {
@@ -23,12 +30,13 @@ namespace Scene
         private void Start()
         {
             if (Camera.main == null) throw new Exception("Add `MainCamera` tag to main camera");
-            
             _cameraDrag = Camera.main.GetComponent<CameraDrag>();
             
             menuButton.onClick.AddListener(ToggleMenuOverlay);
             closeMenuButton.onClick.AddListener(ToggleMenuOverlay);
             exitButton.onClick.AddListener(OnExitButtonClick);
+
+            Level level = Game.App.LevelManager.GetCurrentLevel();
         }
 
         private static void OnExitButtonClick()

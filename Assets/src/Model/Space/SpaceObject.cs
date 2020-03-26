@@ -3,12 +3,12 @@ using UnityEngine;
 
 namespace Model.Space
 {
-    [Serializable]
     public abstract class SpaceObject
     {
-        [SerializeField] private int id;
-        [SerializeField] private string name;
-        [SerializeField] private Vector2 position;
+        private int id;
+        private string name;
+        private Vector2 position;
+        private Player _owner;
 
         public int Id => id;
         public string Name => name;
@@ -19,6 +19,11 @@ namespace Model.Space
             this.id = id;
             this.name = name;
             this.position = position;
+        }
+
+        public void SetOwner(Player owner)
+        {
+            this._owner = owner;
         }
     }
 }

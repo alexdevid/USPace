@@ -1,23 +1,41 @@
-﻿using System;
-using Model.Space;
-using Model.Space.Dictionary;
+﻿using Model.Space;
 using UnityEngine;
-using UnityPackages;
+using Model.Space.Dictionary;
 using Random = UnityEngine.Random;
 
 namespace Generator
 {
     public static class StarSystemGenerator
     {
+        private const float UniverseSize = 50000 * 2.387f;
         private const string StarSystemPrefix = "USC";
         
-        public static Promise<StarSystem> Generate(Vector2 location)
+        public static StarSystem Generate(int seed)
         {
-            return new Promise<StarSystem>((resolve, reject) =>
-            {
-                StarSystem system = new StarSystem(GenerateName(location), location, GenerateType());
-                resolve(system);
-            });
+            Random.InitState(seed);
+            
+            Vector2 location = GenerateSystemLocation();
+            StarSystem system = new StarSystem(seed, GenerateName(location), location, GenerateType());
+            GenerateObjects(system);
+            
+            return system;
+        }
+
+        private static void GenerateObjects(StarSystem system)
+        {
+            Star star = new Star(1, $"{system.Name}-a", Vector2.zero, StarType.YellowDwarf);
+            Planet planet = new Planet(1, $"{system.Name}-a", Vector2.zero, PlanetType.Desert);
+            
+            system.AddObject(star);
+        }
+
+        private static Vector2 GenerateSystemLocation()
+        {
+            const float halfSize = UniverseSize / 2;
+            float x = Random.Range(-halfSize, halfSize);
+            float y = Random.Range(-halfSize, halfSize);
+
+            return new Vector2(x, y);
         }
         
         private static string GenerateName(Vector2 location)

@@ -21,4 +21,13 @@
         Pulsar,
         BlackHole
     }
+
+    public enum PlanetType
+    {
+        Desert,
+        Ocean,
+        Terra,
+        Ice,
+        Gas,
+    }
 }

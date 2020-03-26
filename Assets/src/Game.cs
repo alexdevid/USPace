@@ -1,4 +1,6 @@
-﻿using Model;
+﻿using Data.Storage;
+using Model;
+using Model.Space;
 
 public class Game
 {
@@ -6,6 +8,8 @@ public class Game
 
     public LevelManager LevelManager { get; } = LevelManager.Load();
     public Player Player { get; }
+    public StarSystem CurrentStarSystem { get; set; }
+    public IStorage Storage { get; }
 
     public static Game App
     {
@@ -19,5 +23,6 @@ public class Game
     private Game()
     {
         Player = new Player();
+        Storage = new LocalStorage();
     }
 }

@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Data.Repository;
 using Generator;
 using Model;
 using UI.General;
@@ -7,7 +7,6 @@ using UI.SinglePlayer;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using UnityPackages;
 
 namespace Scene.SinglePlayer
 {
@@ -44,11 +43,8 @@ namespace Scene.SinglePlayer
             loadingScreen.SetActive(false);
             createOverlay.SetActive(false);
             CreateLevelSelectors();
-        }
 
-        private void Update()
-        {
-            Debug.Log(WorldGenerator.Counter);
+            Game.App.Storage.Get<Level>(1);
         }
 
         private void OnGUI()
@@ -73,11 +69,12 @@ namespace Scene.SinglePlayer
             createOverlay.SetActive(false);
             loadingScreen.SetActive(true);
 
-            Game.App.LevelManager.CreateLevel(WorldGenerator.WorldSeed, levelNameInput.text);
-            Game.App.LevelManager.Store();
-
-            // WorldGenerator.Generate().Then(generated => { SceneManager.LoadScene(GameSystem); });
-            WorldGenerator.Generate();
+            Level level = Game.App.LevelManager.CreateLevel(WorldGenerator.WorldSeed, levelNameInput.text);
+            Game.App.Storage.Store(level);
+            
+            // Game.App.CurrentStarSystem = StarSystemGenerator.Generate(1);
+            
+            // SceneManager.LoadScene(GameSystem);
         }
 
         private void OnLevelSelected(LevelSelector selector)
