@@ -11,6 +11,20 @@ namespace Data.Storage
     {
         private const char ResourceKeyDelimiter = '|';
 
+        public void Delete(StorageObject model)
+        {
+            Delete(model.StorageIndex);
+        }
+
+        public void Delete(int id)
+        {
+            StorageObject model = Get<StorageObject>(id);
+            if (model == null) return;
+            
+            DeleteResourceKey(model);
+            DeleteFields(model);
+        }
+        
         public bool Has<T>(int id) where T : StorageObject
         {
             StorageObject instance = (T) Activator.CreateInstance(typeof(T), new object[] { });
@@ -31,29 +45,6 @@ namespace Data.Storage
             }
             
             SaveResourceKey(model);
-        }
-
-        private void SaveResourceKey(StorageObject model)
-        {
-            string[] keys = GetResourceKeys(model.ResourceName);
-            
-            Array.Resize(ref keys, keys.Length + 1);
-            keys[keys.GetUpperBound(0)] = model.StorageIndex.ToString();
-            
-            PlayerPrefs.SetString(model.ResourceName, string.Join(ResourceKeyDelimiter.ToString(), keys));
-            Debug.Log(string.Join(ResourceKeyDelimiter.ToString(), keys));
-        }
-
-        private string[] GetResourceKeys(string resource)
-        {
-            string keys = PlayerPrefs.GetString(resource);
-            
-            return keys.Split(ResourceKeyDelimiter);
-        }
-
-        private bool ResourceHasKey(string resource, int key)
-        {
-            return GetResourceKeys(resource).Contains(key.ToString());
         }
 
         public List<T> GetAll<T>() where T : StorageObject
@@ -96,14 +87,52 @@ namespace Data.Storage
             return (T) model;
         }
 
-        private string Load(string resource, int key)
+        private void DeleteFields(StorageObject model)
         {
-            return PlayerPrefs.GetString(GetKey(resource, key));
+            FieldInfo[] fields = model.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
+            foreach (FieldInfo fieldInfo in fields)
+            {
+                PlayerPrefs.DeleteKey($"{GetKey(model)}.{fieldInfo.Name}");
+            }    
+        }
+        
+        private void DeleteResourceKey(StorageObject model)
+        {
+            string[] keys = GetResourceKeys(model.ResourceName);
+            
+            Array.Resize(ref keys, keys.Length + 1);
+            keys[keys.GetUpperBound(0)] = model.StorageIndex.ToString();
+            
+            PlayerPrefs.SetString(model.ResourceName, string.Join(ResourceKeyDelimiter.ToString(), keys));
+            Debug.Log(string.Join(ResourceKeyDelimiter.ToString(), keys));    
+        }
+        
+        private void SaveResourceKey(StorageObject model)
+        {
+            string[] keys = GetResourceKeys(model.ResourceName);
+            
+            Array.Resize(ref keys, keys.Length + 1);
+            keys[keys.GetUpperBound(0)] = model.StorageIndex.ToString();
+            
+            PlayerPrefs.SetString(model.ResourceName, string.Join(ResourceKeyDelimiter.ToString(), keys));
+            Debug.Log(string.Join(ResourceKeyDelimiter.ToString(), keys));
+        }
+
+        private string[] GetResourceKeys(string resource)
+        {
+            string keys = PlayerPrefs.GetString(resource);
+            
+            return keys.Split(ResourceKeyDelimiter);
+        }
+
+        private bool ResourceHasKey(string resource, int key)
+        {
+            return GetResourceKeys(resource).Contains(key.ToString());
         }
 
         private string GetKey(StorageObject model)
         {
-            return $"{model.ResourceName}.{model.StorageIndex}";
+            return GetKey(model.ResourceName, model.StorageIndex);
         }
 
         private string GetKey(string resource, int key)
