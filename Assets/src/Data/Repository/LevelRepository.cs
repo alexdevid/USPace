@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Model;
+using UnityPackages;
 
 namespace Data.Repository
 {
@@ -9,10 +10,23 @@ namespace Data.Repository
         {
             return AbstractRepository.Find<Level>(id);
         }
-        
+
         public static List<Level> FindAll()
         {
-            return AbstractRepository.FindAll<Level>();
+            List<Level> levels = AbstractRepository.FindAll<Level>();
+            levels.Sort((level, level1) => level1.StartTime.CompareTo(level.StartTime));
+
+            return levels;
+        }
+
+        public static void Delete(Level level)
+        {
+            Game.App.Storage.Delete<Level>(level);
+        }
+
+        public static Promise<List<Level>> FindAsync()
+        {
+            return AbstractRepository.FindAsync<Level>();
         }
     }
 }

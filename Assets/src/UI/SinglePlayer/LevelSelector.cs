@@ -29,7 +29,7 @@ namespace UI.SinglePlayer
         private void Update()
         {
             if (Level != null && levelName.text.Length == 0) levelName.text = Level.Name;
-            if (Level != null && date.text.Length == 0) date.text = $"Created: {Level.GetStartDateString()}";
+            if (Level != null && date.text.Length == 0) date.text = $"Created: {Level.StartTime}";
             if (Level != null && stats.text.Length == 0) stats.text = $"Age: {Level.GetLevelAgeString()}";
         }
         

@@ -11,20 +11,12 @@ namespace Data.Storage
     {
         private const char ResourceKeyDelimiter = '|';
 
-        public void Delete(StorageObject model)
+        public void Delete<T>(StorageObject model) where T : StorageObject
         {
-            Delete(model.StorageIndex);
-        }
-
-        public void Delete(int id)
-        {
-            StorageObject model = Get<StorageObject>(id);
-            if (model == null) return;
-            
             DeleteResourceKey(model);
             DeleteFields(model);
         }
-        
+
         public bool Has<T>(int id) where T : StorageObject
         {
             StorageObject instance = (T) Activator.CreateInstance(typeof(T), new object[] { });
@@ -77,7 +69,6 @@ namespace Data.Storage
                 string value = PlayerPrefs.GetString($"{GetKey(model)}.{fieldInfo.Name}");
                 FieldInfo field = model.GetType().GetField(fieldInfo.Name, BindingFlags.NonPublic | BindingFlags.Instance);
 
-                Debug.Log(value);
                 if (field != null && value != null && value.Length > 0)
                 {
                     field.SetValue(model, Convert.ChangeType(value, fieldInfo.FieldType));
@@ -98,13 +89,10 @@ namespace Data.Storage
         
         private void DeleteResourceKey(StorageObject model)
         {
-            string[] keys = GetResourceKeys(model.ResourceName);
+            var keys = new List<string>(GetResourceKeys(model.ResourceName));
+            keys.Remove(model.StorageIndex.ToString());
             
-            Array.Resize(ref keys, keys.Length + 1);
-            keys[keys.GetUpperBound(0)] = model.StorageIndex.ToString();
-            
-            PlayerPrefs.SetString(model.ResourceName, string.Join(ResourceKeyDelimiter.ToString(), keys));
-            Debug.Log(string.Join(ResourceKeyDelimiter.ToString(), keys));    
+            PlayerPrefs.SetString(model.ResourceName, string.Join(ResourceKeyDelimiter.ToString(), keys.ToArray()));
         }
         
         private void SaveResourceKey(StorageObject model)
@@ -115,7 +103,6 @@ namespace Data.Storage
             keys[keys.GetUpperBound(0)] = model.StorageIndex.ToString();
             
             PlayerPrefs.SetString(model.ResourceName, string.Join(ResourceKeyDelimiter.ToString(), keys));
-            Debug.Log(string.Join(ResourceKeyDelimiter.ToString(), keys));
         }
 
         private string[] GetResourceKeys(string resource)

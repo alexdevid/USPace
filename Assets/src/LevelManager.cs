@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Data.Repository;
 using Model;
 using Random = UnityEngine.Random;
 
@@ -15,7 +16,7 @@ public class LevelManager
 
     public void DeleteLevel(Level level)
     {
-        
+        LevelRepository.Delete(level);
     }
     
     public Level CreateLevel(int seed, string name)
@@ -24,7 +25,7 @@ public class LevelManager
         
         Level model = (Level) Activator.CreateInstance(typeof(Level), new object[] { });
             
-        ((StorageObject) model).StorageIndex = id;
+        model.StorageIndex = id;
         
         var nameProp = model.GetType().GetField("name", BindingFlags.NonPublic | BindingFlags.Instance);
         if (nameProp != null)

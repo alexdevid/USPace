@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Data.Repository;
 using Generator;
 using Model;
@@ -31,6 +32,7 @@ namespace Scene.SinglePlayer
         private void Start()
         {
             levelNameInput.text = Level.LevelNameDefault;
+            preloader.max = WorldGenerator.StarSystemsCount;
 
             backButton.onClick.AddListener(OnBackClick);
             playButton.onClick.AddListener(OnPlayClick);
@@ -63,9 +65,8 @@ namespace Scene.SinglePlayer
 
         private void OnCreateClick()
         {
-            preloader.max = WorldGenerator.StarSystemsCount;
             createOverlay.SetActive(false);
-            // loadingScreen.SetActive(true);
+            loadingScreen.SetActive(true);
 
             Level level = Game.App.LevelManager.CreateLevel(WorldGenerator.WorldSeed, levelNameInput.text);
             Game.App.LevelManager.SaveLevel(level);
@@ -111,20 +112,23 @@ namespace Scene.SinglePlayer
 
         private void CreateLevelSelectors()
         {
-            foreach (Level level in LevelRepository.FindAll())
+            LevelRepository.FindAsync().Then(levels =>
             {
-                GameObject levelObject = Instantiate(levelSelector, levelContainer);
-                LevelSelector levelSelectorComponent = levelObject.GetComponent<LevelSelector>();
-                levelSelectorComponent.MouseClickEvent.AddListener(() => OnLevelSelected(levelSelectorComponent));
-                levelSelectorComponent.MouseDoubleClickEvent.AddListener(() =>
+                foreach (Level level in levels)
                 {
-                    OnLevelSelected(levelSelectorComponent);
-                    OnPlayClick();
-                });
-                levelSelectorComponent.Level = level;
+                    GameObject levelObject = Instantiate(levelSelector, levelContainer);
+                    LevelSelector levelSelectorComponent = levelObject.GetComponent<LevelSelector>();
+                    levelSelectorComponent.MouseClickEvent.AddListener(() => OnLevelSelected(levelSelectorComponent));
+                    levelSelectorComponent.MouseDoubleClickEvent.AddListener(() =>
+                    {
+                        OnLevelSelected(levelSelectorComponent);
+                        OnPlayClick();
+                    });
+                    levelSelectorComponent.Level = level;
 
-                _levelSelectors.Add(levelSelectorComponent);
-            }
+                    _levelSelectors.Add(levelSelectorComponent);
+                }
+            });
         }
     }
 }
