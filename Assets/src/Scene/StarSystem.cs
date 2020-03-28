@@ -35,8 +35,6 @@ namespace Scene
             menuButton.onClick.AddListener(ToggleMenuOverlay);
             closeMenuButton.onClick.AddListener(ToggleMenuOverlay);
             exitButton.onClick.AddListener(OnExitButtonClick);
-
-            Level level = Game.App.LevelManager.GetCurrentLevel();
         }
 
         private static void OnExitButtonClick()

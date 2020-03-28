@@ -16,10 +16,10 @@ namespace Generator
 
         public static void Generate()
         {
-            Level level = Game.App.LevelManager.GetCurrentLevel();
-            Random.InitState(level.Seed);
-
-            StarSystemGenerator.Generate(1 * SeedModifier);
+            // Level level = Game.App.LevelManager.GetCurrentLevel();
+            // Random.InitState(level.Seed);
+            //
+            // StarSystemGenerator.Generate(1 * SeedModifier);
             
             // for (int i = 0; i < StarSystemsCount; i++)
             // {

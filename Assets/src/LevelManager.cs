@@ -1,62 +1,60 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Reflection;
 using Model;
-using UnityEngine;
 using Random = UnityEngine.Random;
 
-[Serializable]
 public class LevelManager
 {
-    [SerializeField] private List<Level> levels = new List<Level>();
-    public List<Level> Levels => levels;
+    public List<Level> Levels => Game.App.Storage.GetAll<Level>();
 
-    public static void SaveLevel(Level level)
+    public void SaveLevel(Level level)
     {
         Game.App.Storage.Store(level);
+    }
+
+    public void DeleteLevel(Level level)
+    {
+        
     }
     
     public Level CreateLevel(int seed, string name)
     {
         int id = GetRandomLevelId();
-        Level level = new Level();
-        levels.Add(level);
+        
+        Level model = (Level) Activator.CreateInstance(typeof(Level), new object[] { });
+            
+        ((StorageObject) model).StorageIndex = id;
+        
+        var nameProp = model.GetType().GetField("name", BindingFlags.NonPublic | BindingFlags.Instance);
+        if (nameProp != null)
+        {
+            nameProp.SetValue(model, name);
+        }
+        
+        var seedProp = model.GetType().GetField("seed", BindingFlags.NonPublic | BindingFlags.Instance);
+        if (seedProp != null)
+        {
+            seedProp.SetValue(model, seed);
+        }
+        
+        var startProp = model.GetType().GetField("startTime", BindingFlags.NonPublic | BindingFlags.Instance);
+        if (startProp != null)
+        {
+            startProp.SetValue(model, (Int32) DateTimeOffset.UtcNow.ToUnixTimeSeconds());
+        }
 
-        return level;
-    }
-
-    public void DeleteLevel(Level level)
-    {
-        levels.Remove(level);
-    }
-
-    public Level GetCurrentLevel()
-    {
-        return levels.First();
-    }
-
-    public void Store()
-    {
-        // LocalStorage.Store(LocalStorage.Key.Levels, JsonUtility.ToJson(this));
-    }
-
-    public Level GetLevelById(int id)
-    {
-        return levels.Find(level => level.Id == id);
+        return model;
     }
 
     private int GetRandomLevelId()
     {
         int id = Random.Range(0, int.MaxValue);
-
-        return GetLevelById(id) == null ? id : GetRandomLevelId();
+        return Game.App.Storage.Has<Level>(id) == false ? id : GetRandomLevelId();
     }
 
     public static LevelManager Load()
     {
-        // string json = LocalStorage.GetString(LocalStorage.Key.Levels);
-        // Debug.Log(json);
-        // return json.Length > 0 ? JsonUtility.FromJson<LevelManager>(json) : new LevelManager();
         return new LevelManager();
     }
 

@@ -4,12 +4,12 @@ namespace Model
 {
     public abstract class StorageObject
     {
-        public abstract int StorageIndex { get; }
+        public int StorageIndex { get; set; }
         public abstract string ResourceName { get; }
+
         public abstract void Serialize();
         
         private readonly Dictionary<string, string> _data = new Dictionary<string, string>();
-        
         
         public string GetString()
         {
@@ -25,7 +25,7 @@ namespace Model
 
             return json;
         }
-
+        
         protected void AddField(string key, string value)
         {
             _data.Add(key, value);

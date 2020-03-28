@@ -5,37 +5,24 @@ namespace Model
 {
     public class Level : StorageObject
     {
-        public override int StorageIndex { get; }
-        public override string ResourceName { get; }
-
-        public int Id { get; }
-        public int Seed { get; }
-        public long StartTime { get; }
-        public string Name { get; }
+        public const string LevelNameDefault = "new universe";
+        
+        public override string ResourceName => "level";
+        
+        private int seed;
+        private string name;
+        private int startTime;
+        
+        public int Seed => seed;
+        public string Name => name;
+        public long StartTime => startTime;
 
         private string _ageString;
         private string _startDateString;
-
-        public Level()
-        {
-            Debug.Log("LEVEL CREATED!");
-        }
-
-        // public Level(int seed, string name, long startTime)
-        // {
-        //     Id = seed;
-        //     Seed = seed;
-        //     StartTime = startTime;
-        //     Name = name;
-        //
-        //     ResourceName = "level";
-        //     StorageIndex = Id;
-        // }
-
+        
         public override void Serialize()
         {
             AddField("name", Name);
-            AddField("id", Id);
             AddField("seed", Seed);
             AddField("start_time", StartTime);
         }
