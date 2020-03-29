@@ -40,7 +40,6 @@ namespace Data.Storage.LocalStorage.Persistence
                 field.SetValue(model, Convert.ChangeType(pair.Value, field.FieldType));
             }
 
-            Debug.Log(((Level) model).Name);
             Model = model;
         }
 
@@ -79,9 +78,41 @@ namespace Data.Storage.LocalStorage.Persistence
             }
         }
 
-        private static string FromUnderscoreCase(string str)
+        private static string FromUnderscoreCase(string name)
         {
-            return string.Concat(str.Select((x, i) => i > 0 && char.IsUpper(x) ? "_" + x.ToString() : x.ToString())).ToLower();
+            if (string.IsNullOrEmpty(name) || !name.Contains("_"))
+            {
+                return name;
+            }
+            
+            string[] array = name.Split('_');
+            for(int i = 0; i < array.Length; i++)
+            {
+                string s = array[i];
+                string first = string.Empty;
+                string rest = string.Empty;
+                if (s.Length > 0)
+                {
+                    first = Char.ToUpperInvariant(s[0]).ToString();
+                }
+                if (s.Length > 1)
+                {
+                    rest = s.Substring(1).ToLowerInvariant();
+                }
+                array[i] = first + rest;
+            }
+            
+            string newName = string.Join("", array);
+            if (newName.Length > 0)
+            {
+                newName = Char.ToLowerInvariant(newName[0]) + newName.Substring(1);
+            }
+            else
+            {
+                newName = name;
+            }
+            
+            return newName;
         }
         
         private static string ToUnderscoreCase(string str)

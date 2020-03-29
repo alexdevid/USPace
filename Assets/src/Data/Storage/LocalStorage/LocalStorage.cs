@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Data.Storage.LocalStorage.Persistence;
-using Model;
 using UnityEngine;
 
 namespace Data.Storage.LocalStorage
@@ -27,45 +26,25 @@ namespace Data.Storage.LocalStorage
             {
                 foreach (KeyValuePair<string,string> keyValuePair in entity.Fields)
                 {
-                    Set(keyValuePair.Key, keyValuePair.Value);
+                    Save(keyValuePair.Key, keyValuePair.Value);
                 }
             });
             
-            SaveIndexes();
+            SavePersistedIndexes();
             _persisted.Clear();
-        }
-
-        private void SaveIndexes()
-        {
-            Dictionary<string, List<int>> keys = _persisted.GetKeys();
-            
-            foreach (KeyValuePair<string,List<int>> keyValuePair in keys)
-            {
-                int[] indexArray = keyValuePair.Value.ToArray();
-                int[] storedIndexes = GetKeysForResource(keyValuePair.Key).ToArray();
-                int[] merged = storedIndexes.Concat(indexArray).ToArray();
-                
-                Set(keyValuePair.Key, string.Join(ResourceKeyDelimiter.ToString(), merged));
-            }
-        }
-        
-        private static IEnumerable<int> GetKeysForResource(string resource)
-        {
-            string keys = Get(resource);
-            
-            int[] ids = Array.ConvertAll(keys.Split(ResourceKeyDelimiter), int.Parse);
-            
-            return keys.Length == 0 ? new List<int>() : new List<int>(ids);
-        }
-        
-        private static bool ResourceHasKey(string resource, int key)
-        {
-            return GetKeysForResource(resource).Contains(key);
         }
 
         public void Clear()
         {
             PlayerPrefs.DeleteAll();
+        }
+
+        public void Delete(object model)
+        {
+            Entity entity = new Entity(model);
+            
+            DeleteResourceKey(entity);
+            DeleteFields(entity);
         }
 
         public T Get<T>(int index)
@@ -81,7 +60,7 @@ namespace Data.Storage.LocalStorage
                 string[] keyExploded = keyValuePair.Key.Split('.');
                 string keyName = keyExploded[keyExploded.Length - 1];
                 
-                fields[keyName] = Get(keyValuePair.Key);
+                fields[keyName] = Load(keyValuePair.Key);
             }
             
             entity.UpdateModel(fields, model);
@@ -89,22 +68,73 @@ namespace Data.Storage.LocalStorage
             return (T) entity.Model;
         }
 
-        private static void Set(string key, string value)
+        public List<T> GetAll<T>()
+        {
+            List<int> keys = (List<int>) GetKeysForResource(typeof(T).GetCustomAttribute<StorageModel>().ResourceName);
+
+            return keys.Select(Get<T>).ToList();
+        }
+
+        private void SavePersistedIndexes()
+        {
+            Dictionary<string, List<int>> keys = _persisted.GetKeys();
+            
+            foreach (KeyValuePair<string,List<int>> keyValuePair in keys)
+            {
+                int[] indexArray = keyValuePair.Value.ToArray();
+                int[] storedIndexes = GetKeysForResource(keyValuePair.Key).ToArray();
+                int[] merged = storedIndexes.Concat(indexArray).ToArray();
+                
+                Save(keyValuePair.Key, string.Join(ResourceKeyDelimiter.ToString(), merged));
+            }
+        }
+        
+        private static IEnumerable<int> GetKeysForResource(string resource)
+        {
+            string keys = Load(resource);
+            if (keys.Length == 0) return new List<int>();
+            
+            int[] ids = Array.ConvertAll(keys.Split(ResourceKeyDelimiter), int.Parse);
+            
+            return keys.Length == 0 ? new List<int>() : new List<int>(ids);
+        }
+        
+        private static bool ResourceHasKey(string resource, int key)
+        {
+            return GetKeysForResource(resource).Contains(key);
+        }
+
+        private static void Save(string key, string value)
         {
             PlayerPrefs.SetString(DatabasePrefix + key, value);
         }
 
-        private static string Get(string key)
+        private static string Load(string key)
         {
             return PlayerPrefs.GetString(DatabasePrefix + key);
         }
 
-        // public void Delete<T>(StorageObject model)
-        // {
-        //     DeleteResourceKey(model);
-        //     DeleteFields(model);
-        // }
-        //
+        private static void Remove(string key)
+        {
+            PlayerPrefs.DeleteKey(DatabasePrefix + key);
+        }
+        
+        private static void DeleteFields(Entity entity)
+        {
+            foreach (string key in entity.Fields.Keys)
+            {
+                Remove(key);
+            }
+        }
+        
+        private static void DeleteResourceKey(Entity entity)
+        {
+            List<int> keys = (List<int>) GetKeysForResource(entity.Resource);
+            keys.Remove(entity.Index);
+        
+            Save(entity.Resource, string.Join(ResourceKeyDelimiter.ToString(), keys.ToArray()));
+        }
+        
         // public bool Has<T>(T obj)
         // {
         //     StorageObject attribute = obj.GetType().GetCustomAttribute<StorageObject>();
@@ -158,25 +188,6 @@ namespace Data.Storage.LocalStorage
         //     return (T) model;
         // }
         //
-        // private void DeleteFields(StorageObject model)
-        // {
-        //     FieldInfo[] fields = model.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
-        //     foreach (FieldInfo fieldInfo in fields)
-        //     {
-        //         StorageField attribute = fieldInfo.GetCustomAttribute<StorageField>();
-        //         if (attribute == null) continue;
-        //
-        //         PlayerPrefs.DeleteKey($"{GetKey(model)}.{attribute.name ?? fieldInfo.Name}");
-        //     }
-        // }
-        //
-        // private void DeleteResourceKey(StorageObject model)
-        // {
-        //     var keys = new List<string>(GetResourceKeys(model.ResourceName));
-        //     // keys.Remove(model.StorageIndex.ToString());
-        //
-        //     PlayerPrefs.SetString(model.ResourceName, string.Join(ResourceKeyDelimiter.ToString(), keys.ToArray()));
-        // }
         //
         // private void SaveResourceKey(StorageObject model)
         // {

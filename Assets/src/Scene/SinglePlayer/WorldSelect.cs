@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Data.Repository;
 using Generator;
 using Model;
@@ -36,7 +35,11 @@ namespace Scene.SinglePlayer
             Level level = Game.App.Storage.Get<Level>(754162358);
             if (level != null)
             {
+                Debug.Log(level.Id);
                 Debug.Log(level.Name);
+                Debug.Log(level.StartTime);
+                Debug.Log(level.GetLevelAgeString());
+                Debug.Log(level.GetStartDateString());
             }
 
             backButton.onClick.AddListener(OnBackClick);
@@ -72,14 +75,14 @@ namespace Scene.SinglePlayer
         private void OnCreateClick()
         {
             createOverlay.SetActive(false);
-            // loadingScreen.SetActive(true);
+            loadingScreen.SetActive(true);
 
             Level level = Game.App.LevelManager.CreateLevel(LevelGenerator.WorldSeed, levelNameInput.text);
             Game.App.LevelManager.SaveLevel(level);
 
             // Game.App.CurrentStarSystem = StarSystemGenerator.Generate(1);
 
-            // SceneManager.LoadScene(GameSystem);
+            SceneManager.LoadScene(GameSystem);
         }
 
         private void OnLevelSelected(LevelSelector selector)
@@ -94,11 +97,11 @@ namespace Scene.SinglePlayer
         {
             Game.App.LevelManager.DeleteLevel(_selectedLevel);
 
-            // LevelSelector levelSelectorToDelete = GetLevelSelectorByLevelId(_selectedLevel.StorageIndex);
-            // _levelSelectors.Remove(levelSelectorToDelete);
+            LevelSelector levelSelectorToDelete = GetLevelSelectorByLevelId(_selectedLevel.Id);
+            _levelSelectors.Remove(levelSelectorToDelete);
 
             _selectedLevel = null;
-            // Destroy(levelSelectorToDelete.gameObject);
+            Destroy(levelSelectorToDelete.gameObject);
         }
 
         private static void OnPlayClick()
@@ -113,7 +116,7 @@ namespace Scene.SinglePlayer
 
         private LevelSelector GetLevelSelectorByLevelId(int id)
         {
-            return _levelSelectors.Find(levelSelectorComponent => levelSelectorComponent.Level.Seed== id);
+            return _levelSelectors.Find(levelSelectorComponent => levelSelectorComponent.Level.Id == id);
         }
 
         private void CreateLevelSelectors()

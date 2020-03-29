@@ -11,10 +11,10 @@ namespace Data.Repository
         //     return Game.App.Storage.Get<T>(id);
         // }
         //
-        // protected static List<T> FindAll<T>() where T : StorageObject
-        // {
-        //     return Game.App.Storage.GetAll<T>();
-        // }
+        protected static List<T> FindAll<T>()
+        {
+            return Game.App.Storage.GetAll<T>();
+        }
         //
         // protected static Promise<List<T>> FindAsync<T>() where T : StorageObject
         // {
