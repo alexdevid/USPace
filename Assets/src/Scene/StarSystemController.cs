@@ -1,12 +1,13 @@
 ﻿using System;
-using Model;
+using Factory;
+using Generator;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Scene
 {
-    public class StarSystem : SceneController
+    public class StarSystemController : SceneController
     {
         public Button menuButton;
         public Button closeMenuButton;
@@ -16,11 +17,6 @@ namespace Scene
         public const float GameScreenSize = 10000;
         private CameraDrag _cameraDrag;
         private Model.Space.StarSystem _starSystem;
-
-        private void Awake()
-        {
-            Debug.Log(Game.App.CurrentStarSystem.Name);
-        }
 
         private void Update()
         {
@@ -35,6 +31,13 @@ namespace Scene
             menuButton.onClick.AddListener(ToggleMenuOverlay);
             closeMenuButton.onClick.AddListener(ToggleMenuOverlay);
             exitButton.onClick.AddListener(OnExitButtonClick);
+            
+            Game.App.CurrentStarSystem = StarSystemGenerator.Generate(1);
+            
+            Game.App.CurrentStarSystem.Objects.ForEach(spaceObject =>
+            {
+                GameObject go = SpaceObjectFactory.Generate(spaceObject);
+            });
         }
 
         private static void OnExitButtonClick()

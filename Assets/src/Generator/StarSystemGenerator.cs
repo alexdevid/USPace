@@ -24,9 +24,10 @@ namespace Generator
         private static void GenerateObjects(StarSystem system)
         {
             Star star = new Star(1, $"{system.Name}-a", Vector2.zero, StarType.YellowDwarf);
-            Planet planet = new Planet(1, $"{system.Name}-a", Vector2.zero, PlanetType.Desert);
+            Planet planet = new Planet(1, $"{system.Name}-a", new Vector2(10, 13), PlanetType.Desert);
             
             system.AddObject(star);
+            system.AddObject(planet);
         }
 
         private static Vector2 GenerateSystemLocation()

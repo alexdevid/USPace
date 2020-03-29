@@ -1,4 +1,4 @@
-﻿namespace Object
+﻿namespace Component
 {
     public class Planet : SpaceObject
     {

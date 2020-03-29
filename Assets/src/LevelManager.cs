@@ -6,6 +6,9 @@ using Random = UnityEngine.Random;
 
 public class LevelManager
 {
+    public const int WorldSeed = 393108462;
+    public const int StarSystemsCount = 2;
+    
     public void SaveLevel(Level level)
     {
         Game.App.Storage.Persist(level);
@@ -38,6 +41,10 @@ public class LevelManager
         var startProp = model.GetType().GetField("startTime", BindingFlags.NonPublic | BindingFlags.Instance);
         if (startProp != null)
             startProp.SetValue(model, (Int32) DateTimeOffset.UtcNow.ToUnixTimeSeconds());
+        
+        var systemsCountProp = model.GetType().GetField("systemsCount", BindingFlags.NonPublic | BindingFlags.Instance);
+        if (systemsCountProp != null)
+            systemsCountProp.SetValue(model, StarSystemsCount);
 
         return model;
     }

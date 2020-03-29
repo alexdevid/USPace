@@ -31,7 +31,7 @@ namespace Scene.SinglePlayer
         private void Start()
         {
             levelNameInput.text = Level.LevelNameDefault;
-            preloader.max = LevelGenerator.StarSystemsCount;
+            preloader.max = LevelManager.StarSystemsCount;
             Level level = Game.App.Storage.Get<Level>(754162358);
             if (level != null)
             {
@@ -77,10 +77,10 @@ namespace Scene.SinglePlayer
             createOverlay.SetActive(false);
             loadingScreen.SetActive(true);
 
-            Level level = Game.App.LevelManager.CreateLevel(LevelGenerator.WorldSeed, levelNameInput.text);
+            Level level = Game.App.LevelManager.CreateLevel(LevelManager.WorldSeed, levelNameInput.text);
             Game.App.LevelManager.SaveLevel(level);
 
-            // Game.App.CurrentStarSystem = StarSystemGenerator.Generate(1);
+            Game.App.CurrentStarSystem = StarSystemGenerator.Generate(1);
 
             SceneManager.LoadScene(GameSystem);
         }
@@ -106,6 +106,7 @@ namespace Scene.SinglePlayer
 
         private static void OnPlayClick()
         {
+            Game.App.CurrentStarSystem = StarSystemGenerator.Generate(1);
             SceneManager.LoadScene(GameSystem);
         }
 

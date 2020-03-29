@@ -1,0 +1,27 @@
+﻿{
+    "player": {
+        "id": 1,
+        "name": "Jon Doe",
+        "username": "jondoe@mail.ru",
+        "star_systems": [
+            {
+                "id": 1,
+                "name": "USC-123123-12323",
+                "location": {
+                    "x": 123.54,
+                    "y": -238.12
+                }
+                "objects": [
+                    {
+                        "id": 1,
+                        "name": "planet 1",
+                        "position": {
+                            "x": 123.54,
+                            "y": -238.12
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}

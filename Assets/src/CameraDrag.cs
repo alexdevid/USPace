@@ -71,8 +71,8 @@ public class CameraDrag : MonoBehaviour
             _cameraPosition = _positionOrigin - _positionDelta;
         }
         
-        _cameraPosition.x = Mathf.Clamp(_cameraPosition.x, -Scene.StarSystem.GameScreenSize / 2 + _halfWidth, Scene.StarSystem.GameScreenSize / 2 - _halfWidth);
-        _cameraPosition.y = Mathf.Clamp(_cameraPosition.y,-Scene.StarSystem.GameScreenSize / 2 + _halfHeight, Scene.StarSystem.GameScreenSize / 2 - _halfHeight);
+        _cameraPosition.x = Mathf.Clamp(_cameraPosition.x, -StarSystemController.GameScreenSize / 2 + _halfWidth, StarSystemController.GameScreenSize / 2 - _halfWidth);
+        _cameraPosition.y = Mathf.Clamp(_cameraPosition.y,-StarSystemController.GameScreenSize / 2 + _halfHeight, StarSystemController.GameScreenSize / 2 - _halfHeight);
     }
 
     private float GetZoom()

@@ -1,4 +1,5 @@
-﻿using Model.Space.Dictionary;
+﻿using System.Collections.Generic;
+using Model.Space.Dictionary;
 using UnityEngine;
 
 namespace Model.Space
@@ -12,6 +13,8 @@ namespace Model.Space
         
         public string PublicName;
         
+        public List<SpaceObject> Objects { get; } = new List<SpaceObject>();
+        
 
         public StarSystem(int id, string name, Vector2 location, StarSystemType type)
         {
@@ -24,7 +27,7 @@ namespace Model.Space
 
         public void AddObject(SpaceObject spaceObject)
         {
-            // _objects.Add(spaceObject);
+            Objects.Add(spaceObject);
         }
     }
 }
