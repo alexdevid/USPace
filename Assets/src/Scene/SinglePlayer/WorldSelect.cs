@@ -32,7 +32,12 @@ namespace Scene.SinglePlayer
         private void Start()
         {
             levelNameInput.text = Level.LevelNameDefault;
-            preloader.max = WorldGenerator.StarSystemsCount;
+            preloader.max = LevelGenerator.StarSystemsCount;
+            Level level = Game.App.Storage.Get<Level>(754162358);
+            if (level != null)
+            {
+                Debug.Log(level.Name);
+            }
 
             backButton.onClick.AddListener(OnBackClick);
             playButton.onClick.AddListener(OnPlayClick);
@@ -44,6 +49,7 @@ namespace Scene.SinglePlayer
 
             loadingScreen.SetActive(false);
             createOverlay.SetActive(false);
+            
             CreateLevelSelectors();
         }
 
@@ -66,9 +72,9 @@ namespace Scene.SinglePlayer
         private void OnCreateClick()
         {
             createOverlay.SetActive(false);
-            loadingScreen.SetActive(true);
+            // loadingScreen.SetActive(true);
 
-            Level level = Game.App.LevelManager.CreateLevel(WorldGenerator.WorldSeed, levelNameInput.text);
+            Level level = Game.App.LevelManager.CreateLevel(LevelGenerator.WorldSeed, levelNameInput.text);
             Game.App.LevelManager.SaveLevel(level);
 
             // Game.App.CurrentStarSystem = StarSystemGenerator.Generate(1);
@@ -88,11 +94,11 @@ namespace Scene.SinglePlayer
         {
             Game.App.LevelManager.DeleteLevel(_selectedLevel);
 
-            LevelSelector levelSelectorToDelete = GetLevelSelectorByLevelId(_selectedLevel.StorageIndex);
-            _levelSelectors.Remove(levelSelectorToDelete);
+            // LevelSelector levelSelectorToDelete = GetLevelSelectorByLevelId(_selectedLevel.StorageIndex);
+            // _levelSelectors.Remove(levelSelectorToDelete);
 
             _selectedLevel = null;
-            Destroy(levelSelectorToDelete.gameObject);
+            // Destroy(levelSelectorToDelete.gameObject);
         }
 
         private static void OnPlayClick()
@@ -107,28 +113,25 @@ namespace Scene.SinglePlayer
 
         private LevelSelector GetLevelSelectorByLevelId(int id)
         {
-            return _levelSelectors.Find(levelSelectorComponent => levelSelectorComponent.Level.StorageIndex == id);
+            return _levelSelectors.Find(levelSelectorComponent => levelSelectorComponent.Level.Seed== id);
         }
 
         private void CreateLevelSelectors()
         {
-            LevelRepository.FindAsync().Then(levels =>
+            foreach (Level level in LevelRepository.FindAll())
             {
-                foreach (Level level in levels)
+                GameObject levelObject = Instantiate(levelSelector, levelContainer);
+                LevelSelector levelSelectorComponent = levelObject.GetComponent<LevelSelector>();
+                levelSelectorComponent.MouseClickEvent.AddListener(() => OnLevelSelected(levelSelectorComponent));
+                levelSelectorComponent.MouseDoubleClickEvent.AddListener(() =>
                 {
-                    GameObject levelObject = Instantiate(levelSelector, levelContainer);
-                    LevelSelector levelSelectorComponent = levelObject.GetComponent<LevelSelector>();
-                    levelSelectorComponent.MouseClickEvent.AddListener(() => OnLevelSelected(levelSelectorComponent));
-                    levelSelectorComponent.MouseDoubleClickEvent.AddListener(() =>
-                    {
-                        OnLevelSelected(levelSelectorComponent);
-                        OnPlayClick();
-                    });
-                    levelSelectorComponent.Level = level;
+                    OnLevelSelected(levelSelectorComponent);
+                    OnPlayClick();
+                });
+                levelSelectorComponent.Level = level;
 
-                    _levelSelectors.Add(levelSelectorComponent);
-                }
-            });
+                _levelSelectors.Add(levelSelectorComponent);
+            }
         }
     }
 }

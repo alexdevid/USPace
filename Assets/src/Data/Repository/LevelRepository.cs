@@ -8,12 +8,12 @@ namespace Data.Repository
     {
         public static Level Find(int id)
         {
-            return AbstractRepository.Find<Level>(id);
+            return new Level();
         }
 
         public static List<Level> FindAll()
         {
-            List<Level> levels = AbstractRepository.FindAll<Level>();
+            List<Level> levels = new List<Level>();
             levels.Sort((level, level1) => level1.StartTime.CompareTo(level.StartTime));
 
             return levels;
@@ -21,12 +21,12 @@ namespace Data.Repository
 
         public static void Delete(Level level)
         {
-            Game.App.Storage.Delete<Level>(level);
+            // Game.App.Storage.Delete<Level>(level);
         }
 
-        public static Promise<List<Level>> FindAsync()
-        {
-            return AbstractRepository.FindAsync<Level>();
-        }
+        // public static Promise<List<Level>> FindAsync()
+        // {
+        //     return AbstractRepository.FindAsync<Level>();
+        // }
     }
 }

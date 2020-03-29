@@ -1,13 +1,6 @@
-﻿using System;
-using Model;
-using Model.Space;
-using UnityEngine;
-using UnityPackages;
-using Random = UnityEngine.Random;
-
-namespace Generator
+﻿namespace Generator
 {
-    public static class WorldGenerator
+    public static class LevelGenerator
     {
         public const int WorldSeed = 393108462;
         public const int StarSystemsCount = 2;

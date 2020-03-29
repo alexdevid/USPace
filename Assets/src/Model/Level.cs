@@ -1,31 +1,26 @@
 ﻿using System;
-using UnityEngine;
+using Data.Storage;
 
 namespace Model
 {
-    public class Level : StorageObject
+    [StorageModel("level", "id")]
+    public class Level
     {
         public const string LevelNameDefault = "new universe";
-        
-        public override string ResourceName => "level";
-        
-        private int seed;
-        private string name;
-        private int startTime;
-        
+
+        [StorageField] private int id;
+        [StorageField] private int seed;
+        [StorageField] private string name;
+        [StorageField] private int startTime;
+        [StorageField] private int systemsCount;
+
+        public int Id => id;
         public int Seed => seed;
         public string Name => name;
         public long StartTime => startTime;
 
         private string _ageString;
         private string _startDateString;
-        
-        public override void Serialize()
-        {
-            AddField("name", Name);
-            AddField("seed", Seed);
-            AddField("start_time", StartTime);
-        }
 
         public string GetLevelAgeString()
         {
