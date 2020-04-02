@@ -342,7 +342,7 @@ PrefabInstance:
     - target: {fileID: 2858633299782679263, guid: c1b3a756fd8e50a4ea056419dcb35db9,
         type: 3}
       propertyPath: m_Name
-      value: ExitButton
+      value: exit_button
       objectReference: {fileID: 0}
     - target: {fileID: 2858633300958110585, guid: c1b3a756fd8e50a4ea056419dcb35db9,
         type: 3}
@@ -369,7 +369,7 @@ GameObject:
   - component: {fileID: 261948617}
   - component: {fileID: 261948616}
   m_Layer: 0
-  m_Name: EventSystem
+  m_Name: event_system
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -436,7 +436,7 @@ GameObject:
   - component: {fileID: 270878470}
   - component: {fileID: 270878469}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -799,7 +799,7 @@ GameObject:
   - component: {fileID: 504844419}
   - component: {fileID: 504844420}
   m_Layer: 5
-  m_Name: DisplayFpsToggle
+  m_Name: toggle_fps
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1046,7 +1046,7 @@ GameObject:
   - component: {fileID: 821476253}
   - component: {fileID: 821476254}
   m_Layer: 0
-  m_Name: GameController
+  m_Name: game_controller
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1093,7 +1093,7 @@ GameObject:
   - component: {fileID: 907807959}
   - component: {fileID: 907807960}
   m_Layer: 5
-  m_Name: FullScreenToggle
+  m_Name: toggle_fullscreen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1672,7 +1672,7 @@ GameObject:
   - component: {fileID: 1570560783}
   - component: {fileID: 1570560782}
   m_Layer: 5
-  m_Name: ResolutionDropDown
+  m_Name: dropdown_resolution
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

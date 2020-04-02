@@ -8,9 +8,9 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-namespace Scene.SinglePlayer
+namespace Component.SceneController
 {
-    public class WorldSelect : SceneController
+    public class WorldSelectController : AbstractSceneController
     {
         public Button createButton;
         public Button backButton;
@@ -84,7 +84,7 @@ namespace Scene.SinglePlayer
 
             Game.App.CurrentStarSystem = StarSystemGenerator.Generate(1);
 
-            SceneManager.LoadScene(GameSystem);
+            SceneManager.LoadScene(SceneStarSystem);
         }
 
         private void OnLevelSelected(LevelSelector selector)
@@ -109,12 +109,12 @@ namespace Scene.SinglePlayer
         private static void OnPlayClick()
         {
             Game.App.CurrentStarSystem = StarSystemGenerator.Generate(1);
-            SceneManager.LoadScene(GameSystem);
+            SceneManager.LoadScene(SceneStarSystem);
         }
 
         private static void OnBackClick()
         {
-            SceneManager.LoadScene(MainMenu);
+            SceneManager.LoadScene(SceneMainMenu);
         }
 
         private LevelSelector GetLevelSelectorByLevelId(int id)

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Model;
 using Network.DataTransfer;
 using Network.DataTransfer.Security;
@@ -24,7 +25,7 @@ namespace Network
         public static async Task<AuthStatus> Auth()
         {
             if (Game.App.IsLogged) return AuthStatus.Success;
-            
+
             if (string.IsNullOrEmpty(Game.App.Token))
             {
                 return AuthStatus.InvalidToken;
@@ -47,15 +48,23 @@ namespace Network
 
         private static AuthStatus AuthorizeUser(string response)
         {
-            LoginResponse user = JsonUtility.FromJson<LoginResponse>(response);
-            if (!string.IsNullOrEmpty(user.error))
+            try
             {
-                return GetErrorStatus(user.error);
+                LoginResponse user = JsonUtility.FromJson<LoginResponse>(response);
+
+                if (!string.IsNullOrEmpty(user.error))
+                {
+                    return GetErrorStatus(user.error);
+                }
+
+                Game.App.SetPlayer(Player.CreateFromDTO(user));
+
+                return AuthStatus.Success;
             }
-
-            Game.App.SetPlayer(Player.CreateFromDTO(user));
-
-            return AuthStatus.Success;
+            catch (ArgumentException e)
+            {
+                return AuthStatus.Error;
+            }
         }
 
         private static AuthStatus GetErrorStatus(string error)

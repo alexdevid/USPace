@@ -2,9 +2,9 @@
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-namespace Scene.General
+namespace Component.SceneController
 {
-    public class Options : SceneController
+    public class OptionsController : AbstractSceneController
     {
         public Button exitButton;
         public Toggle displayFpsToggle;
@@ -52,7 +52,7 @@ namespace Scene.General
         
         private static void OnExitClick()
         {
-            SceneManager.LoadScene(MainMenu);
+            SceneManager.LoadScene(SceneMainMenu);
         }
     }
 }

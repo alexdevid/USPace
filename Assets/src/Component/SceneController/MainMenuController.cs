@@ -1,28 +1,38 @@
-﻿using System;
-using System.Threading.Tasks;
-using Network;
+﻿using Network;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-namespace Scene.General
+namespace Component.SceneController
 {
-    public class MainMenu : SceneController
+    public class MainMenuController : AbstractSceneController
     {
-        public Button startButton;
+        public Button playButton;
         public Button optionsButton;
         public Button exitButton;
-        public Button multiplayerButton;
         public Button logoutButton;
         public Text username;
         public GameObject userBlock;
-        
         public Transform preloader;
 
-        private async void Awake()
+        private void Awake()
         {
             Game.Init();
+        }
+
+        private void Start()
+        {
             RenderUserBlock();
+            
+            playButton.onClick.AddListener(OnStartClick);
+            optionsButton.onClick.AddListener(OnSettingsClick);
+            exitButton.onClick.AddListener(OnExitClick);
+            logoutButton.onClick.AddListener(OnLogoutClick);
+        }
+
+        private void FixedUpdate()
+        {
+            if (preloader.gameObject.activeSelf) preloader.Rotate(new Vector3(0, 1, 0), 2.5f);
         }
 
         private async void RenderUserBlock()
@@ -39,20 +49,6 @@ namespace Scene.General
             preloader.gameObject.SetActive(false);
         }
 
-        private void Start()
-        {
-            startButton.onClick.AddListener(OnStartClick);
-            optionsButton.onClick.AddListener(OnSettingsClick);
-            exitButton.onClick.AddListener(OnExitClick);
-            multiplayerButton.onClick.AddListener(OnMultiplayerClick);
-            logoutButton.onClick.AddListener(OnLogoutClick);
-        }
-
-        private void Update()
-        {
-            if (preloader.gameObject.activeSelf) preloader.Rotate(new Vector3(0, 1, 0), 2.5f);
-        }
-
         private void OnLogoutClick()
         {
             userBlock.SetActive(false);
@@ -61,22 +57,17 @@ namespace Scene.General
         
         private static void OnStartClick()
         {
-            SceneManager.LoadScene(WorldSelect);
+            SceneManager.LoadScene(SceneLogin);
         }
 
         private static void OnSettingsClick()
         {
-            SceneManager.LoadScene(Options);
+            SceneManager.LoadScene(SceneOptions);
         }
 
         private static void OnExitClick()
         {
             Game.App.Quit();
-        }
-
-        private async void OnMultiplayerClick()
-        {
-            SceneManager.LoadScene(SceneLogin);
         }
     }
 }

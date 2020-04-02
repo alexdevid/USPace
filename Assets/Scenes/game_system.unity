@@ -248,7 +248,7 @@ PrefabInstance:
     - target: {fileID: 2858633299782679263, guid: c1b3a756fd8e50a4ea056419dcb35db9,
         type: 3}
       propertyPath: m_Name
-      value: MenuButton
+      value: button_menu
       objectReference: {fileID: 0}
     - target: {fileID: 2858633300958110585, guid: c1b3a756fd8e50a4ea056419dcb35db9,
         type: 3}
@@ -275,7 +275,7 @@ GameObject:
   - component: {fileID: 261948617}
   - component: {fileID: 261948616}
   m_Layer: 0
-  m_Name: EventSystem
+  m_Name: event_system
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -342,7 +342,7 @@ GameObject:
   - component: {fileID: 270878470}
   - component: {fileID: 270878469}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -625,7 +625,7 @@ PrefabInstance:
     - target: {fileID: 2858633299782679263, guid: c1b3a756fd8e50a4ea056419dcb35db9,
         type: 3}
       propertyPath: m_Name
-      value: CloseMenuButton
+      value: button_close_menu
       objectReference: {fileID: 0}
     - target: {fileID: 2858633300958110585, guid: c1b3a756fd8e50a4ea056419dcb35db9,
         type: 3}
@@ -10546,7 +10546,7 @@ GameObject:
   - component: {fileID: 849483383}
   - component: {fileID: 849483382}
   m_Layer: 5
-  m_Name: Panel
+  m_Name: panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10858,7 +10858,7 @@ PrefabInstance:
     - target: {fileID: 2858633299782679263, guid: c1b3a756fd8e50a4ea056419dcb35db9,
         type: 3}
       propertyPath: m_Name
-      value: ExitButton
+      value: button_exit
       objectReference: {fileID: 0}
     - target: {fileID: 2858633300958110585, guid: c1b3a756fd8e50a4ea056419dcb35db9,
         type: 3}

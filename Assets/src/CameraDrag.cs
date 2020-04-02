@@ -1,4 +1,4 @@
-﻿using Scene;
+﻿using Component.SceneController;
 using UnityEngine;
 
 public class CameraDrag : MonoBehaviour
