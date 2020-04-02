@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Network;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -12,12 +13,30 @@ namespace Scene.General
         public Button optionsButton;
         public Button exitButton;
         public Button multiplayerButton;
+        public Button logoutButton;
+        public Text username;
+        public GameObject userBlock;
         
         public Transform preloader;
 
-        private void Awake()
+        private async void Awake()
         {
             Game.Init();
+            RenderUserBlock();
+        }
+
+        private async void RenderUserBlock()
+        {
+            userBlock.SetActive(false);
+            preloader.gameObject.SetActive(true);
+            Authenticator.AuthStatus status = await Authenticator.Auth();
+            if (status == Authenticator.AuthStatus.Success)
+            {
+                username.text = Game.App.Player.Username;
+                userBlock.SetActive(true);
+            }
+            
+            preloader.gameObject.SetActive(false);
         }
 
         private void Start()
@@ -26,13 +45,20 @@ namespace Scene.General
             optionsButton.onClick.AddListener(OnSettingsClick);
             exitButton.onClick.AddListener(OnExitClick);
             multiplayerButton.onClick.AddListener(OnMultiplayerClick);
+            logoutButton.onClick.AddListener(OnLogoutClick);
         }
 
         private void Update()
         {
-            preloader.Rotate(new Vector3(0, 1, 0), 2.5f);
+            if (preloader.gameObject.activeSelf) preloader.Rotate(new Vector3(0, 1, 0), 2.5f);
         }
 
+        private void OnLogoutClick()
+        {
+            userBlock.SetActive(false);
+            Game.App.Logout();
+        }
+        
         private static void OnStartClick()
         {
             SceneManager.LoadScene(WorldSelect);
@@ -45,21 +71,12 @@ namespace Scene.General
 
         private static void OnExitClick()
         {
-            Debug.Log("BYE!");
-            // Game.App.Client.Disconnect();
-            Application.Quit();
+            Game.App.Quit();
         }
 
         private async void OnMultiplayerClick()
         {
-            var something = await Fetch();
-            
-            Debug.Log(something);
-        }
-
-        async Task<string> Fetch()
-        {
-            return await Task.Run(() => Game.App.Client.SendMessage("hello world"));
+            SceneManager.LoadScene(SceneLogin);
         }
     }
 }

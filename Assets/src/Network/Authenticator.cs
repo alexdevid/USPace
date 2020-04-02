@@ -1,56 +1,66 @@
-﻿using Model;
+﻿using System.Threading.Tasks;
+using Model;
 using Network.DataTransfer;
 using Network.DataTransfer.Security;
 using UnityEngine;
-using UnityPackages;
 
 namespace Network
 {
-    public class Authenticator
+    public static class Authenticator
     {
         private const string LoginMethod = "security.login";
         private const string AuthMethod = "security.auth";
-        
-        
-        // public static Promise<bool> Login(string username, string password)
-        // {
-        //     LoginRequest data = new LoginRequest(username, password);
-        //     Request<LoginRequest> request = new Request<LoginRequest>(LoginMethod, data);
-        //     
-        //     return new Promise<bool>((resolve, reject) =>
-        //     {
-        //         request.Send().Then(response =>
-        //         {
-        //             AuthorizeUser(response);
-        //             resolve(true);
-        //         }).Catch(reject);
-        //     });
-        //     
-        // }
-        //
-        // public static Promise<bool> Auth()
-        // {
-        //     return new Promise<bool>((resolve, reject) =>
-        //     {
-        //         if (string.IsNullOrEmpty(Game.App.Token))
-        //         {
-        //             resolve(false);
-        //         }
-        //         
-        //         Request<AuthRequest> request = new Request<AuthRequest>(AuthMethod, new AuthRequest(Game.App.Token));
-        //         request.Send().Then(response =>
-        //         {
-        //             AuthorizeUser(response);
-        //             Debug.Log(response);
-        //             resolve(true);
-        //         }).Catch(reject);
-        //     });
-        // }
 
-        private static void AuthorizeUser(string response)
+        private const string ExceptionWrongCredentials = "WrongCredentialsException";
+
+        public enum AuthStatus
+        {
+            Success,
+            InvalidToken,
+            WrongCredentials,
+            Error
+        }
+
+        public static async Task<AuthStatus> Auth()
+        {
+            if (Game.App.IsLogged) return AuthStatus.Success;
+            
+            if (string.IsNullOrEmpty(Game.App.Token))
+            {
+                return AuthStatus.InvalidToken;
+            }
+
+            Request<AuthRequest> request = new Request<AuthRequest>(AuthMethod, new AuthRequest(Game.App.Token));
+            string json = await request.Send();
+
+            return AuthorizeUser(json);
+        }
+
+        public static async Task<AuthStatus> Login(string username, string password)
+        {
+            LoginRequest data = new LoginRequest(username, password);
+            Request<LoginRequest> request = new Request<LoginRequest>(LoginMethod, data);
+            string json = await request.Send();
+
+            return AuthorizeUser(json);
+        }
+
+        private static AuthStatus AuthorizeUser(string response)
         {
             LoginResponse user = JsonUtility.FromJson<LoginResponse>(response);
+            if (!string.IsNullOrEmpty(user.error))
+            {
+                return GetErrorStatus(user.error);
+            }
+
             Game.App.SetPlayer(Player.CreateFromDTO(user));
+
+            return AuthStatus.Success;
+        }
+
+        private static AuthStatus GetErrorStatus(string error)
+        {
+            return error == ExceptionWrongCredentials ? AuthStatus.WrongCredentials : AuthStatus.Error;
         }
     }
 }

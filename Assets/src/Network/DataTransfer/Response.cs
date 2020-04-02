@@ -6,5 +6,7 @@ namespace Network.DataTransfer
     public class Response
     {
         public string uid;
+        public string error;
+        public string message;
     }
 }

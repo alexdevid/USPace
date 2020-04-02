@@ -16,7 +16,8 @@ public class Game
     public IStorage Storage { get; }
     public Proxy Client { get; } = new Proxy();
     public string Token { get; private set; }
-
+    public bool IsLogged { get; private set; }
+    
     public static Game App
     {
         get
@@ -28,9 +29,24 @@ public class Game
 
     public void SetPlayer(Player player)
     {
+        IsLogged = true;
         Player = player;
         Token = player.Token;
         PlayerPrefs.SetString(TokenStorageKey, Token);
+    }
+    
+    public void Logout()
+    {
+        IsLogged = false;
+        Token = null;
+        PlayerPrefs.DeleteKey(TokenStorageKey);
+        Player = new Player();
+    }
+
+    public void Quit()
+    {
+        if (Client.IsConnected()) App.Client.Disconnect();
+        Application.Quit();
     }
 
     public static void Init()
@@ -42,7 +58,6 @@ public class Game
     {
         Player = new Player();
         Storage = new LocalStorage();
-        Client.SetupServer();
         Token = PlayerPrefs.GetString(TokenStorageKey);
     }
 }

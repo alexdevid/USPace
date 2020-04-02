@@ -1,21 +1,11 @@
 ﻿using System;
-using System.Threading.Tasks;
-using Model;
 using Network;
-using Network.DataTransfer;
-using Network.DataTransfer.Security;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Scene.General
 {
-
-    enum AuthStatus
-    {
-        Success, ShowForm, ShowError
-    }
-    
     public class Login : SceneController
     {
         public Button loginButton;
@@ -26,19 +16,20 @@ namespace Scene.General
         public Transform preloader;
         public GameObject preloaderOverlay;
 
-        private AuthStatus _authStatus;
-        
+        private async void Awake()
+        {
+            Game.Init();
+            
+            Authenticator.AuthStatus status = await Authenticator.Auth();
+            if (status == Authenticator.AuthStatus.Success) SceneManager.LoadScene(WorldSelect);
+            else preloaderOverlay.SetActive(false);
+            
+        }
+
         private void Start()
         {
             loginButton.onClick.AddListener(OnLoginClick);
             backButton.onClick.AddListener(OnBackClick);
-
-            // Authenticator.Auth()
-            //     .Then(HandleAuthorization)
-            //     .Catch(error =>
-            //     {
-            //         Debug.Log("ERROR");
-            //     });
         }
 
         private void Update()
@@ -48,28 +39,28 @@ namespace Scene.General
 
         private void HandleAuthorization(bool result)
         {
-            _authStatus = result ? AuthStatus.Success : AuthStatus.ShowForm;
+            // _authStatus = result ? Authenticator.AuthStatus.Success : Authenticator.AuthStatus.ShowForm;
         }
 
-        private void ShowError(string error)
+        private async void OnLoginClick()
         {
-            errorText.text = error;
-            _authStatus = AuthStatus.ShowError;
-        }
+            Color color = Color.black;
+            color.a = 0.85f;
 
-        private void OnLoginClick()
-        {
-            // Authenticator.Login(username.text, password.text).Then(result =>
-            // {
-            //     if (result)
-            //     {
-            //         Debug.Log("AUTHORIZED");
-            //     }
-            //     else
-            //     {
-            //         Debug.Log("AUTH ERROR!");
-            //     }
-            // }).Catch(ShowError);
+            errorText.text = string.Empty;
+            preloaderOverlay.GetComponent<Image>().color = color;
+            preloaderOverlay.SetActive(true);
+
+            Authenticator.AuthStatus status = await Authenticator.Login(username.text, password.text);
+            if (status == Authenticator.AuthStatus.Success)
+            {
+                SceneManager.LoadScene(WorldSelect);
+            }
+            else if (status == Authenticator.AuthStatus.WrongCredentials)
+            {
+                preloaderOverlay.SetActive(false);
+                errorText.text = "Wrong credentials";
+            }
         }
 
         private static void OnBackClick()
