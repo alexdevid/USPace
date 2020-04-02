@@ -1,19 +1,32 @@
-﻿using System.Collections.Generic;
+﻿using Network.DataTransfer.Security;
 
 namespace Model
 {
     public class Player
     {
-        private int id;
-        private string name;
-
-        public int Id => id;
-        public string Name => name;
+        public int Id { get; private set; }
+        public string Username { get; private set; }
+        public string Email { get; private set; }
+        public string Token { get; private set; }
+        public string Flag { get; private set; }
+        public string CreatedAt { get; private set; }
         
         public Player()
         {
-            id = 1;
-            name = "DeviD";
+            Id = 1;
+            Username = "unknown";
+        }
+
+        public static Player CreateFromDTO(LoginResponse response)
+        {
+            return new Player
+            {
+                Username = response.username,
+                Email = response.email,
+                Token = response.token,
+                Flag = response.flag,
+                CreatedAt = response.created_at
+            };
         }
     }
 }

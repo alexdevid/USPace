@@ -30,6 +30,13 @@ namespace Scene.SinglePlayer
 
         private void Start()
         {
+            Debug.Log(Game.App.Player.Id);
+            Debug.Log(Game.App.Player.Username);
+            Debug.Log(Game.App.Player.Email);
+            Debug.Log(Game.App.Player.CreatedAt);
+            Debug.Log(Game.App.Player.Flag);
+            Debug.Log(Game.App.Player.Token);
+            
             levelNameInput.text = Level.LevelNameDefault;
             preloader.max = LevelManager.StarSystemsCount;
             Level level = Game.App.Storage.Get<Level>(754162358);

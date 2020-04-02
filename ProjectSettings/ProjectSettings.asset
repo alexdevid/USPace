@@ -645,10 +645,10 @@ PlayerSettings:
     m_VersionCode: 1
     m_VersionName: 
   apiCompatibilityLevel: 6
-  cloudProjectId: 
+  cloudProjectId: 5d453499-71eb-41ab-9b10-4dc94b2499c0
   framebufferDepthMemorylessMode: 0
-  projectName: 
-  organizationId: 
+  projectName: space
+  organizationId: alexdevid
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
   disableOldInputManagerSupport: 0
