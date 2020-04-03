@@ -32,9 +32,9 @@ namespace Component.SceneController
             closeMenuButton.onClick.AddListener(ToggleMenuOverlay);
             exitButton.onClick.AddListener(OnExitButtonClick);
 
-            Game.App.CurrentStarSystem = StarSystemGenerator.Generate(1);
+            Game.App.StarSystem = StarSystemGenerator.Generate(1);
 
-            Game.App.CurrentStarSystem.Objects.ForEach(spaceObject =>
+            Game.App.StarSystem.Objects.ForEach(spaceObject =>
             {
                 GameObject go = SpaceObjectFactory.Generate(spaceObject);
             });

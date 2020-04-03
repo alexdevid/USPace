@@ -9,7 +9,8 @@ public class Game
     private static Game _app = new Game();
 
     public Player Player { get; private set; }
-    public StarSystem CurrentStarSystem { get; set; }
+    public Level World { get; set; }
+    public StarSystem StarSystem { get; set; }
     public Proxy Client { get; } = new Proxy();
     public string Token { get; private set; }
     public bool IsLogged { get; private set; }

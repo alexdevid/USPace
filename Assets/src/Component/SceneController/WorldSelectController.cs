@@ -52,9 +52,9 @@ namespace Component.SceneController
             _selectedLevel = selector.Level;
         }
 
-        private static void OnPlayClick()
+        private void OnPlayClick()
         {
-            Game.App.CurrentStarSystem = StarSystemGenerator.Generate(1);
+            Game.App.World = _selectedLevel;
             SceneManager.LoadScene(SceneStarSystem);
         }
 
