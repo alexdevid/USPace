@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Model.Space.Dictionary;
+using Network.DataTransfer.StarSystem;
 using UnityEngine;
 
 namespace Model.Space
@@ -10,11 +11,11 @@ namespace Model.Space
         public readonly string Name;
         public readonly Vector2 Location;
         public readonly StarSystemType Type;
-        
-        public string PublicName;
+
+        private string PublicName { get; set; }
         
         public List<SpaceObject> Objects { get; } = new List<SpaceObject>();
-        
+
 
         public StarSystem(int id, string name, Vector2 location, StarSystemType type)
         {
@@ -28,6 +29,14 @@ namespace Model.Space
         public void AddObject(SpaceObject spaceObject)
         {
             Objects.Add(spaceObject);
+        }
+
+        public static StarSystem CreateFromDTO(StarSystemResponse response)
+        {
+            //TODO type!
+            StarSystem system = new StarSystem(response.id, response.name, new Vector2(response.position_x, response.position_y), StarSystemType.Single);
+
+            return system;
         }
     }
 }

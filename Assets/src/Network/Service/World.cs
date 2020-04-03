@@ -15,8 +15,6 @@ namespace Network.Service
         
         public static async Task<Level> GetLevel(int id)
         {
-            // if (!Game.App.IsLogged) return Authenticator.AuthStatus.Success; //TODO
-
             Request<WorldRequest> request = new Request<WorldRequest>(GetMethod, new WorldRequest(id));
             string json = await request.Send();
             try

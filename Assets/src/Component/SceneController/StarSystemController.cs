@@ -1,6 +1,7 @@
 ﻿using System;
 using Factory;
 using Generator;
+using Network.Service;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -16,7 +17,6 @@ namespace Component.SceneController
 
         public const float GameScreenSize = 10000;
         private CameraDrag _cameraDrag;
-        private Model.Space.StarSystem _starSystem;
 
         private void Update()
         {
@@ -32,7 +32,12 @@ namespace Component.SceneController
             closeMenuButton.onClick.AddListener(ToggleMenuOverlay);
             exitButton.onClick.AddListener(OnExitButtonClick);
 
-            Game.App.StarSystem = StarSystemGenerator.Generate(1);
+            LoadAndRenderSystem();
+        }
+
+        private async void LoadAndRenderSystem()
+        {
+            Game.App.StarSystem = await StarSystem.GetSystem(Game.App.Player.HomeSystemId);
 
             Game.App.StarSystem.Objects.ForEach(spaceObject =>
             {

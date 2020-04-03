@@ -11,5 +11,6 @@ namespace Network.DataTransfer.Security
         public string email;
         public string flag;
         public string created_at;
+        public int home_system_id = 1;
     }
 }

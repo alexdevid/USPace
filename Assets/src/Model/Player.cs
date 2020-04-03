@@ -10,6 +10,7 @@ namespace Model
         public string Token { get; private set; }
         public string Flag { get; private set; }
         public string CreatedAt { get; private set; }
+        public int HomeSystemId { get; set; }
         
         public Player()
         {
@@ -25,7 +26,8 @@ namespace Model
                 Email = response.email,
                 Token = response.token,
                 Flag = response.flag,
-                CreatedAt = response.created_at
+                CreatedAt = response.created_at,
+                HomeSystemId = response.home_system_id
             };
         }
     }
