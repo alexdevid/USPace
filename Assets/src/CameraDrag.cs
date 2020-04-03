@@ -14,6 +14,7 @@ public class CameraDrag : MonoBehaviour
     private Vector3 _positionOrigin;
     private Vector3 _positionDelta;
     private Vector3 _cameraPosition;
+    private Camera _camera;
     
     private float _halfWidth;
     private float _halfHeight;
@@ -23,7 +24,8 @@ public class CameraDrag : MonoBehaviour
     private void Start()
     {
         interactive = true;
-        _cameraPosition = gameObject.GetComponent<Camera>().transform.position;
+        _camera = gameObject.GetComponent<Camera>();
+        _cameraPosition = _camera.transform.position;
         
         UpdateCameraSize();
     }
@@ -39,11 +41,11 @@ public class CameraDrag : MonoBehaviour
         
         if (Input.GetMouseButton(0))
         {
-            _positionDelta = (gameObject.GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition)) - _cameraPosition;
+            _positionDelta = (_camera.ScreenToWorldPoint(Input.mousePosition)) - _cameraPosition;
             if (_drag == false)
             {
                 _drag = true;
-                _positionOrigin = gameObject.GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition);
+                _positionOrigin = _camera.ScreenToWorldPoint(Input.mousePosition);
             }
         }
         else
@@ -53,8 +55,8 @@ public class CameraDrag : MonoBehaviour
 
         UpdateCameraPosition();
         
-        gameObject.GetComponent<Camera>().orthographicSize = GetZoom();
-        gameObject.GetComponent<Camera>().transform.position = _cameraPosition;
+        _camera.orthographicSize = GetZoom();
+        _camera.transform.position = _cameraPosition;
 
         float speed = 1.01f;
         foreach (Transform parallaxLayer in parallaxLayers)
@@ -77,7 +79,7 @@ public class CameraDrag : MonoBehaviour
 
     private float GetZoom()
     {
-        float zoom = gameObject.GetComponent<Camera>().orthographicSize;
+        float zoom = _camera.orthographicSize;
         zoom -= Input.GetAxis("Mouse ScrollWheel") * zoomSensitivity;
         
         return Mathf.Clamp(zoom, ZoomMin, ZoomMax);
@@ -85,7 +87,7 @@ public class CameraDrag : MonoBehaviour
     
     private void UpdateCameraSize()
     {
-        _halfHeight = gameObject.GetComponent<Camera>().orthographicSize;
-        _halfWidth = gameObject.GetComponent<Camera>().aspect * _halfHeight;
+        _halfHeight = _camera.orthographicSize;
+        _halfWidth = _camera.aspect * _halfHeight;
     }
 }

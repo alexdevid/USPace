@@ -17,11 +17,6 @@ namespace Component.SceneController
         public GameObject preloaderOverlay;
 
         private bool _loginRequestProcess;
-        
-        private void Awake()
-        {
-            Game.Init();
-        }
 
         private void Start()
         {

@@ -24,8 +24,6 @@ namespace Network
 
         public static async Task<AuthStatus> Auth()
         {
-            if (Game.App.IsLogged) return AuthStatus.Success;
-
             if (string.IsNullOrEmpty(Game.App.Token))
             {
                 return AuthStatus.InvalidToken;

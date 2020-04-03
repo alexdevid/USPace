@@ -1,18 +1,17 @@
 ﻿using System;
-using Data.Storage;
+using Network.DataTransfer.World;
 
 namespace Model
 {
-    [StorageModel("level", "id")]
     public class Level
     {
         public const string LevelNameDefault = "new universe";
 
-        [StorageField] private int id;
-        [StorageField] private int seed;
-        [StorageField] private string name;
-        [StorageField] private int startTime;
-        [StorageField] private int systemsCount;
+        private int id;
+        private int seed;
+        private string name;
+        private int startTime;
+        private int systemsCount;
 
         public int Id => id;
         public int Seed => seed;
@@ -44,6 +43,14 @@ namespace Model
             _startDateString = dateTime.ToShortDateString();
 
             return _startDateString;
+        }
+
+        public static Level CreateFromDTO(WorldResponse dto)
+        {
+            Level level = new Level();
+            level.name = "asdasd";
+            
+            return level;
         }
     }
 }

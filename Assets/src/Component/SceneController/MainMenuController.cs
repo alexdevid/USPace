@@ -15,11 +15,6 @@ namespace Component.SceneController
         public GameObject userBlock;
         public Transform preloader;
 
-        private void Awake()
-        {
-            Game.Init();
-        }
-
         private void Start()
         {
             RenderUserBlock();
@@ -39,6 +34,7 @@ namespace Component.SceneController
         {
             userBlock.SetActive(false);
             preloader.gameObject.SetActive(true);
+            
             Authenticator.AuthStatus status = await Authenticator.Auth();
             if (status == Authenticator.AuthStatus.Success)
             {
@@ -57,7 +53,7 @@ namespace Component.SceneController
         
         private static void OnStartClick()
         {
-            SceneManager.LoadScene(SceneLogin);
+            SceneManager.LoadScene(Game.App.IsLogged ? SceneWorldSelect : SceneLogin);
         }
 
         private static void OnSettingsClick()

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Data.Repository;
 using Generator;
 using Model;
+using Network.Service;
 using UI.General;
 using UI.SinglePlayer;
 using UnityEngine;
@@ -12,12 +12,8 @@ namespace Component.SceneController
 {
     public class WorldSelectController : AbstractSceneController
     {
-        public Button createButton;
         public Button backButton;
         public Button playButton;
-        public Button deleteButton;
-        public Button showCreateOverlayButton;
-        public Button hideCreateOverlayButton;
         public Transform levelContainer;
         public Preloader preloader;
         public GameObject levelSelector;
@@ -30,27 +26,12 @@ namespace Component.SceneController
 
         private void Start()
         {
-            Debug.Log(Game.App.Player.Email);
-            
             levelNameInput.text = Level.LevelNameDefault;
-            preloader.max = LevelManager.StarSystemsCount;
-            Level level = Game.App.Storage.Get<Level>(754162358);
-            if (level != null)
-            {
-                Debug.Log(level.Id);
-                Debug.Log(level.Name);
-                Debug.Log(level.StartTime);
-                Debug.Log(level.GetLevelAgeString());
-                Debug.Log(level.GetStartDateString());
-            }
+            preloader.max = 10000;
 
             backButton.onClick.AddListener(OnBackClick);
             playButton.onClick.AddListener(OnPlayClick);
             playButton.onClick.AddListener(OnPlayClick);
-            deleteButton.onClick.AddListener(OnDeleteClick);
-            createButton.onClick.AddListener(OnCreateClick);
-            showCreateOverlayButton.onClick.AddListener(OnCreateOverlayClick);
-            hideCreateOverlayButton.onClick.AddListener(OnHideOverlayClick);
 
             loadingScreen.SetActive(false);
             createOverlay.SetActive(false);
@@ -61,30 +42,6 @@ namespace Component.SceneController
         private void OnGUI()
         {
             playButton.interactable = _selectedLevel != null;
-            deleteButton.interactable = _selectedLevel != null;
-        }
-
-        private void OnHideOverlayClick()
-        {
-            createOverlay.SetActive(false);
-        }
-
-        private void OnCreateOverlayClick()
-        {
-            createOverlay.SetActive(true);
-        }
-
-        private void OnCreateClick()
-        {
-            createOverlay.SetActive(false);
-            loadingScreen.SetActive(true);
-
-            Level level = Game.App.LevelManager.CreateLevel(LevelManager.WorldSeed, levelNameInput.text);
-            Game.App.LevelManager.SaveLevel(level);
-
-            Game.App.CurrentStarSystem = StarSystemGenerator.Generate(1);
-
-            SceneManager.LoadScene(SceneStarSystem);
         }
 
         private void OnLevelSelected(LevelSelector selector)
@@ -93,17 +50,6 @@ namespace Component.SceneController
 
             selector.SetSelected(true);
             _selectedLevel = selector.Level;
-        }
-
-        private void OnDeleteClick()
-        {
-            Game.App.LevelManager.DeleteLevel(_selectedLevel);
-
-            LevelSelector levelSelectorToDelete = GetLevelSelectorByLevelId(_selectedLevel.Id);
-            _levelSelectors.Remove(levelSelectorToDelete);
-
-            _selectedLevel = null;
-            Destroy(levelSelectorToDelete.gameObject);
         }
 
         private static void OnPlayClick()
@@ -117,14 +63,11 @@ namespace Component.SceneController
             SceneManager.LoadScene(SceneMainMenu);
         }
 
-        private LevelSelector GetLevelSelectorByLevelId(int id)
+        private async void CreateLevelSelectors()
         {
-            return _levelSelectors.Find(levelSelectorComponent => levelSelectorComponent.Level.Id == id);
-        }
-
-        private void CreateLevelSelectors()
-        {
-            foreach (Level level in LevelRepository.FindAll())
+            List<Level> levels = await World.GetLevels();
+            
+            foreach (Level level in levels)
             {
                 GameObject levelObject = Instantiate(levelSelector, levelContainer);
                 LevelSelector levelSelectorComponent = levelObject.GetComponent<LevelSelector>();
@@ -135,7 +78,7 @@ namespace Component.SceneController
                     OnPlayClick();
                 });
                 levelSelectorComponent.Level = level;
-
+            
                 _levelSelectors.Add(levelSelectorComponent);
             }
         }
