@@ -22,7 +22,7 @@ namespace UI.General
 
         private void Update()
         {
-            _barTransform.sizeDelta = new Vector2 (GetCurrentWidth(), _barTransform.sizeDelta.y);
+            _barTransform.sizeDelta = new Vector2(GetCurrentWidth(), _barTransform.sizeDelta.y);
         }
 
         private float GetCurrentWidth()

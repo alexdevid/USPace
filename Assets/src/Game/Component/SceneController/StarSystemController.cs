@@ -1,12 +1,13 @@
 ﻿using System;
 using Factory;
-using Generator;
-using Network.Service;
+using Model.Space;
+using Network.DataTransfer.StarSystem;
+using Service.Space;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-namespace Component.SceneController
+namespace Game.Component.SceneController
 {
     public class StarSystemController : AbstractSceneController
     {
@@ -14,6 +15,7 @@ namespace Component.SceneController
         public Button closeMenuButton;
         public Button exitButton;
         public GameObject menuPanel;
+        public GameObject preloaderOverlay;
 
         public const float GameScreenSize = 10000;
         private CameraDrag _cameraDrag;
@@ -25,6 +27,7 @@ namespace Component.SceneController
 
         private void Start()
         {
+            preloaderOverlay.SetActive(true);
             if (Camera.main == null) throw new Exception("Add `MainCamera` tag to main camera");
             _cameraDrag = Camera.main.GetComponent<CameraDrag>();
 
@@ -37,9 +40,33 @@ namespace Component.SceneController
 
         private async void LoadAndRenderSystem()
         {
-            Game.App.StarSystem = await StarSystem.GetSystem(Game.App.Player.HomeSystemId);
+            try
+            {
+                GameController.StarSystem = await StarSystemService.GetSystem(2);
+                preloaderOverlay.SetActive(false);
+            }
+            catch (Exception e)
+            {
+                if (e.Message == "DomainObjectNotFoundException")
+                {
+                    GameController.StarSystem = StarSystem.CreateFromDTO(new StarSystemResponse());
+                }
+                else
+                {
+                    GameController.Error = "OOPs!.\n" +
+                                           "Something went wrong. \n" +
+                                           $"System could not be loaded {GameController.CurrentSystemId}\n" +
+                                           e.Message;
 
-            Game.App.StarSystem.Objects.ForEach(spaceObject =>
+                    throw;
+                }
+            }
+
+            Debug.Log(GameController.StarSystem.IsNew());
+            Debug.Log(GameController.StarSystem.PublicName);
+            Debug.Log(GameController.StarSystem.Id);
+
+            GameController.StarSystem.Objects.ForEach(spaceObject =>
             {
                 GameObject go = SpaceObjectFactory.Generate(spaceObject);
             });

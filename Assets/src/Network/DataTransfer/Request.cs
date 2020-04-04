@@ -18,7 +18,7 @@ namespace Network.DataTransfer
 
         public async Task<string> Send()
         {
-            return await Game.App.Client.SendMessage(JsonUtility.ToJson(this));
+            return await GameController.Client.SendMessage(JsonUtility.ToJson(this));
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Component
+namespace Game.Component
 {
     public abstract class SpaceObject : MonoBehaviour
     {
@@ -10,7 +10,7 @@ namespace Component
         {
             if (Model != null)
             {
-                transform.position = new Vector3(Model.Position.x, Model.Position.y);
+                // transform.position = new Vector3(Model.Position.x, Model.Position.y);
             }
         }
 

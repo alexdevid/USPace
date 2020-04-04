@@ -16,7 +16,7 @@ namespace Factory
         {
             GameObject go = new GameObject(GetGameObjectUniqueName(spaceObject));
 
-            go.AddComponent<Component.Planet>().Model = spaceObject;
+            go.AddComponent<Game.Component.Planet>().Model = spaceObject;
             SpriteRenderer spriteRenderer = go.AddComponent<SpriteRenderer>();
             go.AddComponent<CircleCollider2D>();
 
@@ -27,7 +27,7 @@ namespace Factory
 
         private static string GetGameObjectUniqueName(SpaceObject spaceObject)
         {
-            return GetPrefix(spaceObject.GetType()) + spaceObject.Id;
+            return GetPrefix(spaceObject.GetType());
         }
         
         private static string GetPrefix(Type type)

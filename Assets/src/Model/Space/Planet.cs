@@ -7,7 +7,7 @@ namespace Model.Space
     {
         private PlanetType type;
         
-        public Planet(int id, string name, Vector2 position, PlanetType type) : base(id, name, position)
+        public Planet(int id, string name, Vector2 position, PlanetType type)
         {
             this.type = type;
         }

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Generator;
 using Model;
 using Network.Service;
 using UI.General;
@@ -8,7 +7,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-namespace Component.SceneController
+namespace Game.Component.SceneController
 {
     public class WorldSelectController : AbstractSceneController
     {
@@ -35,7 +34,7 @@ namespace Component.SceneController
 
             loadingScreen.SetActive(false);
             createOverlay.SetActive(false);
-            
+
             CreateLevelSelectors();
         }
 
@@ -54,7 +53,9 @@ namespace Component.SceneController
 
         private void OnPlayClick()
         {
-            Game.App.World = _selectedLevel;
+            GameController.Level = _selectedLevel;
+            GameController.CurrentSystemId = GameController.Player.HomeSystemId;
+
             SceneManager.LoadScene(SceneStarSystem);
         }
 
@@ -66,7 +67,7 @@ namespace Component.SceneController
         private async void CreateLevelSelectors()
         {
             List<Level> levels = await World.GetLevels();
-            
+
             foreach (Level level in levels)
             {
                 GameObject levelObject = Instantiate(levelSelector, levelContainer);
@@ -78,7 +79,7 @@ namespace Component.SceneController
                     OnPlayClick();
                 });
                 levelSelectorComponent.Level = level;
-            
+
                 _levelSelectors.Add(levelSelectorComponent);
             }
         }

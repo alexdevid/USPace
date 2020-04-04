@@ -15,7 +15,7 @@ namespace UI.SinglePlayer
         public Text stats;
         public Image preview;
         public Image background;
-        
+
         public Level Level { get; set; }
 
         public readonly UnityEvent MouseClickEvent = new UnityEvent();
@@ -32,7 +32,7 @@ namespace UI.SinglePlayer
             if (Level != null && date.text.Length == 0) date.text = $"Created: {Level.StartTime}";
             if (Level != null && stats.text.Length == 0) stats.text = $"Age: {Level.GetLevelAgeString()}";
         }
-        
+
         public void OnPointerClick(PointerEventData eventData)
         {
             if (eventData.clickCount == 2)
@@ -47,7 +47,7 @@ namespace UI.SinglePlayer
             if (selected) alpha = 0.2f;
             Color color = background.color;
             color.a = alpha;
-            
+
             background.color = color;
         }
     }

@@ -1,7 +1,8 @@
 ﻿using Model.Space;
-using UnityEngine;
 using Model.Space.Dictionary;
+using UnityEngine;
 using Random = UnityEngine.Random;
+using StarSystemType = Model.Space.StarSystemType;
 
 namespace Generator
 {
@@ -15,7 +16,7 @@ namespace Generator
             Random.InitState(seed);
             
             Vector2 location = GenerateSystemLocation();
-            StarSystem system = new StarSystem(seed, GenerateName(location), location, GenerateType());
+            StarSystem system = new StarSystem();
             GenerateObjects(system);
             
             return system;

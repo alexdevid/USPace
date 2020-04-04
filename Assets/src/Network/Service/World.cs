@@ -38,6 +38,8 @@ namespace Network.Service
             //todo worldListRequest
             Request<object> request = new Request<object>(ListMethod, new object());
             string json = await request.Send();
+            Debug.Log(json);
+            
             try
             {
                 WorldListResponse response = JsonUtility.FromJson<WorldListResponse>(json);

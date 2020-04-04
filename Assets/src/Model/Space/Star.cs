@@ -7,7 +7,7 @@ namespace Model.Space
     {
         private StarType type;
 
-        public Star(int id, string name, Vector2 position, StarType type) : base(id, name, position)
+        public Star(int id, string name, Vector2 position, StarType type)
         {
             this.type = type;
         }

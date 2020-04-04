@@ -1,10 +1,9 @@
-﻿using System;
-using Network;
+﻿using Network;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-namespace Component.SceneController
+namespace Game.Component.SceneController
 {
     public class LoginController : AbstractSceneController
     {
@@ -22,6 +21,7 @@ namespace Component.SceneController
         {
             Authorize();
             SetFocus(username);
+            errorText.text = GameController.Error;
 
             loginButton.onClick.AddListener(OnLoginClick);
             backButton.onClick.AddListener(OnBackClick);

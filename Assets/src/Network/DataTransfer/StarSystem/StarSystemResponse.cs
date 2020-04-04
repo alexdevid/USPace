@@ -3,7 +3,7 @@
 namespace Network.DataTransfer.StarSystem
 {
     [Serializable]
-    public class StarSystemResponse
+    public class StarSystemResponse : Response
     {
         public int id;
         public string name;
@@ -19,5 +19,10 @@ namespace Network.DataTransfer.StarSystem
 
         public string owner;
         public string discovered_by;
+
+        public Model.Space.StarSystem CreateModel()
+        {
+            return Model.Space.StarSystem.CreateFromDTO(this);
+        }
     }
 }

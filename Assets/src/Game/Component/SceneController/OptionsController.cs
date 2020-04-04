@@ -2,7 +2,7 @@
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-namespace Component.SceneController
+namespace Game.Component.SceneController
 {
     public class OptionsController : AbstractSceneController
     {
@@ -14,7 +14,7 @@ namespace Component.SceneController
         private void Start()
         {
             InitSettingsGui();
-            
+
             exitButton.onClick.AddListener(OnExitClick);
             displayFpsToggle.onValueChanged.AddListener(OnDisplayFpsToggle);
             fullScreenToggle.onValueChanged.AddListener(OnFullScreenToggle);
@@ -25,7 +25,7 @@ namespace Component.SceneController
         {
             fullScreenToggle.isOn = Screen.fullScreen;
             displayFpsToggle.isOn = ConfigManager.GetBool(ConfigManager.Name.SettingsDisplayFps);
-            
+
             foreach (Resolution resolution in Screen.resolutions)
             {
                 Dropdown.OptionData option = new Dropdown.OptionData();
@@ -39,17 +39,17 @@ namespace Component.SceneController
         {
             Screen.SetResolution(Screen.resolutions[value].width, Screen.resolutions[value].height, true);
         }
-        
+
         private static void OnFullScreenToggle(bool value)
         {
             Screen.SetResolution(Screen.currentResolution.width, Screen.currentResolution.height, value);
         }
-        
+
         private static void OnDisplayFpsToggle(bool value)
         {
             ConfigManager.Store(ConfigManager.Name.SettingsDisplayFps, value);
         }
-        
+
         private static void OnExitClick()
         {
             SceneManager.LoadScene(SceneMainMenu);

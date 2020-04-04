@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-namespace Component.SceneController
+namespace Game.Component.SceneController
 {
     public class MainMenuController : AbstractSceneController
     {
@@ -18,7 +18,7 @@ namespace Component.SceneController
         private void Start()
         {
             RenderUserBlock();
-            
+
             playButton.onClick.AddListener(OnStartClick);
             optionsButton.onClick.AddListener(OnSettingsClick);
             exitButton.onClick.AddListener(OnExitClick);
@@ -34,26 +34,26 @@ namespace Component.SceneController
         {
             userBlock.SetActive(false);
             preloader.gameObject.SetActive(true);
-            
+
             Authenticator.AuthStatus status = await Authenticator.Auth();
             if (status == Authenticator.AuthStatus.Success)
             {
-                username.text = Game.App.Player.Username;
+                username.text = GameController.Player.Username;
                 userBlock.SetActive(true);
             }
-            
+
             preloader.gameObject.SetActive(false);
         }
 
         private void OnLogoutClick()
         {
             userBlock.SetActive(false);
-            Game.App.Logout();
+            GameController.Logout();
         }
-        
+
         private static void OnStartClick()
         {
-            SceneManager.LoadScene(Game.App.IsLogged ? SceneWorldSelect : SceneLogin);
+            SceneManager.LoadScene(GameController.IsLogged ? SceneWorldSelect : SceneLogin);
         }
 
         private static void OnSettingsClick()
@@ -63,7 +63,7 @@ namespace Component.SceneController
 
         private static void OnExitClick()
         {
-            Game.App.Quit();
+            GameController.Quit();
         }
     }
 }

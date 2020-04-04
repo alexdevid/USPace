@@ -1,19 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Net.Sockets;
+﻿﻿using System;
+ using System.Diagnostics;
+ using System.Net;
+ using System.Net.NetworkInformation;
+ using System.Net.Sockets;
 using System.Text;
-using System.Threading.Tasks;
-using Network.DataTransfer;
-using UnityEngine;
+ using System.Threading;
+ using System.Threading.Tasks;
+ using Debug = UnityEngine.Debug;
+ using Ping = System.Net.NetworkInformation.Ping;
 
-namespace Network
+ namespace Network
 {
     public class Proxy
     {
-        private bool _connected = false;
         private readonly byte[] _bytes = new byte[1024]; //8142
         private readonly Socket _clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        private bool _connected = false;
 
         public async Task<string> SetupServer()
         {
@@ -24,15 +26,19 @@ namespace Network
         {
             return _connected;
         }
-
+        
+        //TODO refactor!
         private string Connect()
         {
             try
             {
-                _clientSocket.Connect(new IPEndPoint(IPAddress.Loopback, 8080));
-                _connected = true;
+                if (IPAddress.TryParse("127.0.0.1:8080".Split(':')[0], out IPAddress ip))
+                {
+                    _clientSocket.Connect(new IPEndPoint(ip, 8080));
+                    _connected = true;
                 
-                return $"Socket connected to {_clientSocket.RemoteEndPoint}";
+                    return $"Socket connected to {_clientSocket.RemoteEndPoint}";
+                }
             }
             catch (SocketException ex)
             {
@@ -44,46 +50,38 @@ namespace Network
 
         public async Task<string> SendMessage(string message)
         {
-            if (!_connected)
+            if (!IsConnected())
             {
                 await SetupServer();
             }
             
             return await Task.Run(() =>
             {
+
                 try
                 {
                     byte[] msg = Encoding.ASCII.GetBytes(message);
                     int bytesSent = _clientSocket.Send(msg);
                     int bytesRec = _clientSocket.Receive(_bytes);
-
-                    return Encoding.ASCII.GetString(_bytes, 0, bytesRec);
-                }
-                catch (ArgumentNullException ane)
-                {
-                    Debug.Log($"ArgumentNullException : {ane.ToString()}");
+                    string response = Encoding.ASCII.GetString(_bytes, 0, bytesRec);
                     
-                    return ane.ToString();
-                }
-                catch (SocketException se)
-                {
-                    Debug.Log($"SocketException : {se.ToString()}");
-                    
-                    return se.ToString();
+                    return response;
                 }
                 catch (Exception e)
                 {
-                    Debug.Log($"Unexpected exception : {e.ToString()}");
+                    Debug.LogError($"Unexpected exception : {e}");
+                    Disconnect();
                     
                     return e.ToString();
                 }
             });
         }
-
+        
         public void Disconnect()
         {
             _clientSocket.Shutdown(SocketShutdown.Both);
             _clientSocket.Close();
+            _connected = false;
         }
     }
 }

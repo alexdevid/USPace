@@ -20,4 +20,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/scenes/login.unity
     guid: d961dc6d552f6ba41b2ac454843abb9d
+  - enabled: 1
+    path: Assets/scenes/error.unity
+    guid: 51adf5a9d02152545a58d37d399b3dda
   m_configObjects: {}
