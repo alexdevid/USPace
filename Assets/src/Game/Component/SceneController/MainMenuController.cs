@@ -1,5 +1,4 @@
-﻿using Network;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -10,45 +9,23 @@ namespace Game.Component.SceneController
         public Button playButton;
         public Button optionsButton;
         public Button exitButton;
-        public Button logoutButton;
-        public Text username;
-        public GameObject userBlock;
-        public Transform preloader;
 
         private void Start()
         {
-            RenderUserBlock();
-
             playButton.onClick.AddListener(OnStartClick);
             optionsButton.onClick.AddListener(OnSettingsClick);
             exitButton.onClick.AddListener(OnExitClick);
-            logoutButton.onClick.AddListener(OnLogoutClick);
-        }
 
-        private void FixedUpdate()
-        {
-            if (preloader.gameObject.activeSelf) preloader.Rotate(new Vector3(0, 1, 0), 2.5f);
-        }
-
-        private async void RenderUserBlock()
-        {
-            userBlock.SetActive(false);
-            preloader.gameObject.SetActive(true);
-
-            Authenticator.AuthStatus status = await Authenticator.Auth();
-            if (status == Authenticator.AuthStatus.Success)
-            {
-                username.text = GameController.Player.Username;
-                userBlock.SetActive(true);
-            }
-
-            preloader.gameObject.SetActive(false);
-        }
-
-        private void OnLogoutClick()
-        {
-            userBlock.SetActive(false);
-            GameController.Logout();
+            // if (!GameController.Client.IsConnected())
+            // {
+            //     playButton.GetComponent<Button>().interactable = false;
+            // }
+            //
+            // GameController.Client.OnConnected.AddListener(() =>
+            // {
+            //     Debug.Log("CONNECTED...................");
+            //     playButton.GetComponent<Button>().interactable = true;
+            // });
         }
 
         private static void OnStartClick()

@@ -24,15 +24,15 @@ namespace Network
 
         public static async Task<AuthStatus> Auth()
         {
-            if (string.IsNullOrEmpty(GameController.Token))
-            {
-                return AuthStatus.InvalidToken;
-            }
-
-            if (GameController.IsLogged)
-            {
-                return AuthStatus.Success;
-            }
+            // if (string.IsNullOrEmpty(GameController.Token))
+            // {
+            //     return AuthStatus.InvalidToken;
+            // }
+            //
+            // if (GameController.IsLogged)
+            // {
+            //     return AuthStatus.Success;
+            // }
 
             Request<AuthRequest> request = new Request<AuthRequest>(AuthMethod, new AuthRequest(GameController.Token));
             string json = await request.Send();
@@ -51,23 +51,16 @@ namespace Network
 
         private static AuthStatus AuthorizeUser(string response)
         {
-            try
+            LoginResponse user = JsonUtility.FromJson<LoginResponse>(response);
+
+            if (!string.IsNullOrEmpty(user.error))
             {
-                LoginResponse user = JsonUtility.FromJson<LoginResponse>(response);
-
-                if (!string.IsNullOrEmpty(user.error))
-                {
-                    return GetErrorStatus(user.error);
-                }
-
-                GameController.SetPlayer(Player.CreateFromDTO(user));
-
-                return AuthStatus.Success;
+                return GetErrorStatus(user.error);
             }
-            catch (ArgumentException e)
-            {
-                return AuthStatus.Error;
-            }
+
+            GameController.SetPlayer(Player.CreateFromDTO(user));
+
+            return AuthStatus.Success;
         }
 
         private static AuthStatus GetErrorStatus(string error)

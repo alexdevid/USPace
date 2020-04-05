@@ -13,21 +13,19 @@ namespace Game.Component.UI
             Hide();
         }
 
-        public ErrorMessageBox SetText(string message)
+        public void SetText(string message)
         {
             text.text = message;
-            
-            return this;
         }
         
         public void Show()
         {
-            gameObject.SetActive(true);
+            gameObject.GetComponent<CanvasGroup>().alpha = 1;
         }
         
         public void Hide()
         {
-            gameObject.SetActive(false);
+            gameObject.GetComponent<CanvasGroup>().alpha = 0;
         }
     }
 }

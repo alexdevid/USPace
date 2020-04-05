@@ -6,6 +6,7 @@
 using System.Text;
  using System.Threading;
  using System.Threading.Tasks;
+ using UnityEngine.Events;
  using Debug = UnityEngine.Debug;
  using Ping = System.Net.NetworkInformation.Ping;
 
@@ -16,6 +17,8 @@ using System.Text;
         private readonly byte[] _bytes = new byte[1024]; //8142
         private readonly Socket _clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         private bool _connected = false;
+    
+        public readonly UnityEvent OnConnected = new UnityEvent();
 
         public async Task<string> SetupServer()
         {
@@ -25,6 +28,11 @@ using System.Text;
         public bool IsConnected()
         {
             return _connected;
+        }
+
+        public async Task<string> CheckConnection()
+        {
+            return await SendMessage("a");
         }
         
         //TODO refactor!
@@ -36,6 +44,8 @@ using System.Text;
                 {
                     _clientSocket.Connect(new IPEndPoint(ip, 8080));
                     _connected = true;
+                    Debug.Log("PROXY CONNECTED...................");
+                    OnConnected.Invoke();
                 
                     return $"Socket connected to {_clientSocket.RemoteEndPoint}";
                 }
@@ -43,6 +53,7 @@ using System.Text;
             catch (SocketException ex)
             {
                 Debug.LogError(ex.Message);
+                throw;
             }
 
             return "error";
