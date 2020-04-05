@@ -4,7 +4,7 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 using StarSystemType = Model.Space.StarSystemType;
 
-namespace Generator
+namespace Game.Generator
 {
     public static class StarSystemGenerator
     {

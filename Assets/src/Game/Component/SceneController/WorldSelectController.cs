@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Model;
 using Network.Service;
 using UI.General;
@@ -20,6 +22,7 @@ namespace Game.Component.SceneController
         public GameObject createOverlay;
         public InputField levelNameInput;
 
+        private int _lastPlayedLevelId;
         private Level _selectedLevel;
         private readonly List<LevelSelector> _levelSelectors = new List<LevelSelector>();
 
@@ -35,7 +38,24 @@ namespace Game.Component.SceneController
             loadingScreen.SetActive(false);
             createOverlay.SetActive(false);
 
-            CreateLevelSelectors();
+            _lastPlayedLevelId = GameController.LastPlayedLevelId;
+            
+            HandleSelectors();
+        }
+
+        private async void HandleSelectors()
+        {
+            await CreateLevelSelectors();
+
+            LevelSelector selected = _levelSelectors.Find(selector => selector.Level.Id == _lastPlayedLevelId);
+            if (selected != null)
+            {
+                //TODO render after sort
+                _levelSelectors.OrderBy(selector => selector.Level.Id == _lastPlayedLevelId);
+                
+                selected.SetSelected(true);
+                _selectedLevel = selected.Level;
+            }
         }
 
         private void OnGUI()
@@ -54,6 +74,8 @@ namespace Game.Component.SceneController
         private void OnPlayClick()
         {
             GameController.Level = _selectedLevel;
+            GameController.LastPlayedLevelId = _selectedLevel.Id;
+            Debug.Log(_selectedLevel.Id);
             GameController.CurrentSystemId = GameController.Player.HomeSystemId;
 
             SceneManager.LoadScene(SceneStarSystem);
@@ -64,7 +86,7 @@ namespace Game.Component.SceneController
             SceneManager.LoadScene(SceneMainMenu);
         }
 
-        private async void CreateLevelSelectors()
+        private async Task CreateLevelSelectors()
         {
             List<Level> levels = await World.GetLevels();
 
@@ -72,13 +94,13 @@ namespace Game.Component.SceneController
             {
                 GameObject levelObject = Instantiate(levelSelector, levelContainer);
                 LevelSelector levelSelectorComponent = levelObject.GetComponent<LevelSelector>();
+                levelSelectorComponent.Level = level;
                 levelSelectorComponent.MouseClickEvent.AddListener(() => OnLevelSelected(levelSelectorComponent));
                 levelSelectorComponent.MouseDoubleClickEvent.AddListener(() =>
                 {
                     OnLevelSelected(levelSelectorComponent);
                     OnPlayClick();
                 });
-                levelSelectorComponent.Level = level;
 
                 _levelSelectors.Add(levelSelectorComponent);
             }

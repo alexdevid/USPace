@@ -27,11 +27,11 @@ namespace Model.Space
         public string DiscoveredBy { get; set; }
         
         public float Speed { get; set; }
-        public int DiscoveredAt { get; set; }
+        public long DiscoveredAt { get; set; }
         
         public int Id { get; private set; }
         public int Seed { get; private set; }
-        public int CreatedAt { get; private set; }
+        public long CreatedAt { get; private set; }
         public string Name { get; private set; }
         public Vector2 Location { get; private set; } = Vector2.zero;
         public StarSystemType Type { get; private set; } = StarSystemType.Single;

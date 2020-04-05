@@ -50,6 +50,7 @@ namespace Game.Component.SceneController
                 if (e.Message == "DomainObjectNotFoundException")
                 {
                     GameController.StarSystem = StarSystem.CreateFromDTO(new StarSystemResponse());
+                    preloaderOverlay.SetActive(false);
                 }
                 else
                 {
@@ -61,10 +62,7 @@ namespace Game.Component.SceneController
                     throw;
                 }
             }
-
-            Debug.Log(GameController.StarSystem.IsNew());
-            Debug.Log(GameController.StarSystem.PublicName);
-            Debug.Log(GameController.StarSystem.Id);
+            
 
             GameController.StarSystem.Objects.ForEach(spaceObject =>
             {

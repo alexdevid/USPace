@@ -6,6 +6,7 @@ using UnityEngine;
 public class GameController
 {
     private const string TokenStorageKey = "_user_token";
+    private const string LastPlayedLevelStorageKey = "_user_last_played_level";
     private static GameController _app = new GameController();
 
     private Player _player;
@@ -19,43 +20,44 @@ public class GameController
     private readonly Proxy _client;
 
     public static Proxy Client => _app._client;
-    public static bool IsLogged => _app._isLogged;
+    public static Player Player => _app._player;
     public static string Token => _app._token;
-
-    public static Player Player
-    {
-        get => _app._player;
-        set => _app._player = value;
-    }
+    public static bool IsLogged => _app._isLogged;
 
     public static Level Level
     {
-        get => _app._level;
-        set => _app._level = value;
+        get => App._level;
+        set => App._level = value;
     }
 
     public static StarSystem StarSystem
     {
-        get => _app._starSystem;
-        set => _app._starSystem = value;
+        get => App._starSystem;
+        set => App._starSystem = value;
     }
 
     public static int CurrentSystemId
     {
-        get => _app._currentSystemId;
-        set => _app._currentSystemId = value;
+        get => App._currentSystemId;
+        set => App._currentSystemId = value;
     }
 
     public static string SystemError
     {
-        get => _app._systemError;
-        set => _app._systemError = value;
+        get => App._systemError;
+        set => App._systemError = value;
     }
 
     public static string Error
     {
-        get => _app._error;
-        set => _app._error = value;
+        get => App._error;
+        set => App._error = value;
+    }
+
+    public static int LastPlayedLevelId
+    {
+        get => PlayerPrefs.GetInt(LastPlayedLevelStorageKey);
+        set => PlayerPrefs.SetInt(LastPlayedLevelStorageKey, value);
     }
 
     public static GameController App
@@ -69,32 +71,27 @@ public class GameController
 
     public static void SetPlayer(Player player)
     {
-        _app._isLogged = true;
-        _app._player = player;
-        _app._token = player.Token;
+        App._isLogged = true;
+        App._player = player;
+        App._token = player.Token;
         PlayerPrefs.SetString(TokenStorageKey, player.Token);
     }
 
     public static void Logout()
     {
-        _app._isLogged = false;
-        _app._token = null;
+        App._isLogged = false;
+        App._token = null;
+        App._player = new Player();
         PlayerPrefs.DeleteKey(TokenStorageKey);
-        Player = new Player();
     }
 
     public static void Quit()
     {
-        if (_app._client.IsConnected()) _app._client.Disconnect();
+        if (App._client.IsConnected()) App._client.Disconnect();
 
         Application.Quit();
     }
-
-    public static void Init()
-    {
-        _app = _app ?? new GameController();
-    }
-
+    
     private GameController()
     {
         _token = PlayerPrefs.GetString(TokenStorageKey);

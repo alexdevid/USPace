@@ -21,7 +21,6 @@ namespace Game.Component.SceneController
 
         private void Awake()
         {
-            GameController.Init();
             Application.logMessageReceived += HandleException;
 
             if (SecureScenes.Contains(SceneManager.GetActiveScene().name) && !GameController.IsLogged)

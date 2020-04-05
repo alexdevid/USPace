@@ -21,15 +21,10 @@ namespace UI.SinglePlayer
         public readonly UnityEvent MouseClickEvent = new UnityEvent();
         public readonly UnityEvent MouseDoubleClickEvent = new UnityEvent();
 
-        private void Start()
-        {
-            SetSelected(false);
-        }
-
         private void Update()
         {
             if (Level != null && levelName.text.Length == 0) levelName.text = Level.Name;
-            if (Level != null && date.text.Length == 0) date.text = $"Created: {Level.StartTime}";
+            if (Level != null && date.text.Length == 0) date.text = $"Created: {Level.CreatedAt}";
             if (Level != null && stats.text.Length == 0) stats.text = $"Age: {Level.GetLevelAgeString()}";
         }
 
@@ -48,6 +43,7 @@ namespace UI.SinglePlayer
             Color color = background.color;
             color.a = alpha;
 
+            Debug.Log(Level.Name);
             background.color = color;
         }
     }
