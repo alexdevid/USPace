@@ -1,8 +1,8 @@
-﻿using Model.Space;
-using Model.Space.Dictionary;
+﻿using Game.Model.Space;
+using Game.Model.Space.Dictionary;
 using UnityEngine;
 using Random = UnityEngine.Random;
-using StarSystemType = Model.Space.StarSystemType;
+using StarSystemType = Game.Model.Space.StarSystemType;
 
 namespace Game.Generator
 {

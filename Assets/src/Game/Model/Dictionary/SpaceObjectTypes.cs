@@ -1,4 +1,4 @@
-﻿namespace Model.Space.Dictionary
+﻿namespace Game.Model.Space.Dictionary
 {
     public enum StarSystemType
     {

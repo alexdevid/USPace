@@ -12,6 +12,7 @@ namespace Network
         private const string AuthMethod = "security.auth";
 
         private const string ExceptionWrongCredentials = "WrongCredentialsException";
+        private const string ExceptionTokenNotValid = "TokenNotValidException";
 
         public enum AuthStatus
         {
@@ -55,7 +56,15 @@ namespace Network
 
         private static AuthStatus GetErrorStatus(string error)
         {
-            return error == ExceptionWrongCredentials ? AuthStatus.WrongCredentials : AuthStatus.Error;
+            switch (error)
+            {
+                case ExceptionWrongCredentials:
+                    return AuthStatus.WrongCredentials;
+                case ExceptionTokenNotValid:
+                    return AuthStatus.InvalidToken;
+            }
+            
+            return AuthStatus.Error;
         }
     }
 }

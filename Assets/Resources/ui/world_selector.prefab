@@ -339,7 +339,7 @@ GameObject:
   - component: {fileID: 4272966485733193734}
   - component: {fileID: 4272966485733193735}
   m_Layer: 5
-  m_Name: level_name
+  m_Name: world_name
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -417,7 +417,7 @@ GameObject:
   - component: {fileID: 4272966486707233183}
   - component: {fileID: 1299970504}
   m_Layer: 5
-  m_Name: level_selector
+  m_Name: world_selector
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -467,7 +467,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a1ed4c932e54a1994fba3eab8d94b4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelName: {fileID: 4272966485733193735}
+  worldName: {fileID: 4272966485733193735}
   date: {fileID: 2082712201800023782}
   stats: {fileID: 2082712201322070969}
   preview: {fileID: 2082712200197986165}

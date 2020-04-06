@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-namespace Game.Component.SceneController
+namespace Game.Component.Scene
 {
     public class LoginController : AbstractSceneController
     {
@@ -52,7 +52,7 @@ namespace Game.Component.SceneController
             input.ActivateInputField();
         }
 
-        private async void Authorize()
+        private void Authorize()
         {
             Authenticator.Auth(status =>
             {

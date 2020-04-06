@@ -20,9 +20,9 @@ namespace Network.DataTransfer.StarSystem
         public string owner;
         public string discovered_by;
 
-        public Model.Space.StarSystem CreateModel()
+        public Game.Model.Space.StarSystem CreateModel()
         {
-            return Model.Space.StarSystem.CreateFromDTO(this);
+            return Game.Model.Space.StarSystem.CreateFromDTO(this);
         }
     }
 }

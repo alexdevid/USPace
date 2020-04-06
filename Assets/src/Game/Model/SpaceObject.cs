@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Model.Space
+namespace Game.Model.Space
 {
     public abstract class SpaceObject
     {

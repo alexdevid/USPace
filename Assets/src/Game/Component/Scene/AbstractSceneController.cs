@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.SceneManagement;
 
-namespace Game.Component.SceneController
+namespace Game.Component.Scene
 {
     public abstract class AbstractSceneController : MonoBehaviour
     {

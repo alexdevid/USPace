@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Game.Component.UI;
 using Network;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Game.Component.SceneController.MainMenu
+namespace Game.Component.Scene.MainMenu
 {
     public class UserBlock : MonoBehaviour
     {
@@ -60,33 +59,32 @@ namespace Game.Component.SceneController.MainMenu
             Hide();
             GameController.Logout();
         }
-
-        private async Task CheckConnection()
-        {
-            ShowLoader();
-            try
-            {
-                await GameController.Client.CheckConnection();
-            }
-            catch (Exception e)
-            {
-                ShowError("not connected");
-                connectRetryButton.gameObject.SetActive(true);
-            }
-        }
         
         private void TryConnect()
         {
             ShowLoader();
             Authenticator.Auth(status =>
             {
-                if (status == Authenticator.AuthStatus.Success)
-                    OnLoginSuccess();
-                else Debug.Log(status);
+                switch (status)
+                {
+                    case Authenticator.AuthStatus.Success:
+                        OnLoginSuccess();
+                        break;
+                    case Authenticator.AuthStatus.InvalidToken:
+                        ShowError("Invalid Token\nPlease Login");
+                        break;
+                    case Authenticator.AuthStatus.WrongCredentials:
+                        ShowError("Wrong username or password\nPlease Login");
+                        break;
+                    case Authenticator.AuthStatus.Error:
+                        ShowError("Connection problems\nPlease try again");
+                        connectRetryButton.gameObject.SetActive(true);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(status), status, null);
+                }
             }, error =>
             {
-                Hide();
-                Debug.Log(error.Message);
                 ShowError("Could not connect to server.\nPlease check your internet connection and try again");
                 connectRetryButton.gameObject.SetActive(true);
             });

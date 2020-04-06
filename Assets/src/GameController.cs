@@ -1,20 +1,19 @@
 ﻿using System;
 using Game.Component;
 using Model;
-using Model.Space;
+using Game.Model.Space;
 using Network;
 using UnityEngine;
-using Object = System.Object;
 
 public class GameController
 {
     private const string TokenStorageKey = "_user_token";
-    private const string LastPlayedLevelStorageKey = "_user_last_played_level";
+    private const string LastPlayedWorldStorageKey = "_user_last_played_world";
     private static GameController _app = new GameController();
     private MainThreadWorker _worker;
 
     private Player _player;
-    private Level _level;
+    private World _world;
     private StarSystem _starSystem;
     private int _currentSystemId;
     private bool _isLogged;
@@ -28,10 +27,10 @@ public class GameController
     public static string Token => _app._token;
     public static bool IsLogged => _app._isLogged;
 
-    public static Level Level
+    public static World World
     {
-        get => App._level;
-        set => App._level = value;
+        get => App._world;
+        set => App._world = value;
     }
 
     public static StarSystem StarSystem
@@ -58,10 +57,10 @@ public class GameController
         set => App._error = value;
     }
 
-    public static int LastPlayedLevelId
+    public static int LastPlayedWorldId
     {
-        get => PlayerPrefs.GetInt(LastPlayedLevelStorageKey);
-        set => PlayerPrefs.SetInt(LastPlayedLevelStorageKey, value);
+        get => PlayerPrefs.GetInt(LastPlayedWorldStorageKey);
+        set => PlayerPrefs.SetInt(LastPlayedWorldStorageKey, value);
     }
 
     public static GameController App

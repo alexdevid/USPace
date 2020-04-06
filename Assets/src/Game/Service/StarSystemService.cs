@@ -3,7 +3,7 @@ using Network.DataTransfer;
 using Network.DataTransfer.StarSystem;
 using UnityEngine;
 
-namespace Game.Service.Space
+namespace Game.Service
 {
     public static class StarSystemService
     {

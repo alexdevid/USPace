@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.SceneManagement;
+﻿using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-namespace Game.Component.SceneController
+namespace Game.Component.Scene
 {
     public class MainMenuController : AbstractSceneController
     {

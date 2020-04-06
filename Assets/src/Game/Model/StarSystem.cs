@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Network.DataTransfer.StarSystem;
 using UnityEngine;
 
-namespace Model.Space
+namespace Game.Model.Space
 {
     public enum StarSystemSize
     {
@@ -46,7 +46,7 @@ namespace Model.Space
 
         public bool IsNew()
         {
-            return this.Id == 0;
+            return Id == 0;
         }
 
         public void AddObject(SpaceObject spaceObject)

@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace Game.Component.UI
@@ -20,12 +19,12 @@ namespace Game.Component.UI
         
         public void Show()
         {
-            gameObject.SetActive(true);
+            gameObject.GetComponent<CanvasGroup>().alpha = 1;
         }
         
         public void Hide()
         {
-            gameObject.SetActive(false);
+            gameObject.GetComponent<CanvasGroup>().alpha = 0;
         }
     }
 }

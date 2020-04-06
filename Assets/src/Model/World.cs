@@ -3,11 +3,8 @@ using Network.DataTransfer.World;
 
 namespace Model
 {
-    public class Level
+    public class World
     {
-        public const string LevelNameDefault = "new universe";
-        //{"id":1,"name":"Eva","created_at":1586079520,"status":"1","seed":393108462,"systems_total":50000,"max_players":10000,"current_players":1320}
-        
         public int Id { get; private set; }
         public string Name { get; private set; }
         public long CreatedAt { get; private set; }
@@ -19,7 +16,7 @@ namespace Model
         private string _ageString;
         private string _startDateString;
 
-        public string GetLevelAgeString()
+        public string GetWorldAgeString()
         {
             if (_ageString != null)
                 return _ageString;
@@ -43,9 +40,9 @@ namespace Model
             return _startDateString;
         }
 
-        public static Level CreateFromDTO(WorldResponse response)
+        public static World CreateFromDTO(WorldResponse response)
         {
-            return new Level()
+            return new World()
             {
                 Id = response.id,
                 Name = response.name,

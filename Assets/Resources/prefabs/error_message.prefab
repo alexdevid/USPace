@@ -89,6 +89,7 @@ GameObject:
   - component: {fileID: 596223266079068612}
   - component: {fileID: 596223266079068611}
   - component: {fileID: 596223266079068613}
+  - component: {fileID: 7391342463744742365}
   m_Layer: 5
   m_Name: error_message
   m_TagString: Untagged
@@ -165,3 +166,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   text: {fileID: 596223264979503681}
+--- !u!225 &7391342463744742365
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 596223266079068609}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0

@@ -5,26 +5,26 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Image = UnityEngine.UI.Image;
 
-namespace UI.SinglePlayer
+namespace Game.Component.Scene.WorldSelect
 {
-    public class LevelSelector : MonoBehaviour, IPointerClickHandler
+    public class WorldSelector : MonoBehaviour, IPointerClickHandler
     {
-        public Text levelName;
+        public Text worldName;
         public Text date;
         public Text stats;
         public Image preview;
         public Image background;
 
-        public Level Level { get; set; }
+        public World World { get; set; }
 
         public readonly UnityEvent MouseClickEvent = new UnityEvent();
         public readonly UnityEvent MouseDoubleClickEvent = new UnityEvent();
 
         private void Update()
         {
-            if (Level != null && levelName.text.Length == 0) levelName.text = Level.Name;
-            if (Level != null && date.text.Length == 0) date.text = $"Created: {Level.CreatedAt}";
-            if (Level != null && stats.text.Length == 0) stats.text = $"Age: {Level.GetLevelAgeString()}";
+            if (World != null && worldName.text.Length == 0) worldName.text = World.Name;
+            if (World != null && date.text.Length == 0) date.text = $"Created: {World.CreatedAt}";
+            if (World != null && stats.text.Length == 0) stats.text = $"Age: {World.GetWorldAgeString()}";
         }
 
         public void OnPointerClick(PointerEventData eventData)
@@ -41,8 +41,6 @@ namespace UI.SinglePlayer
             if (selected) alpha = 0.2f;
             Color color = background.color;
             color.a = alpha;
-
-            Debug.Log(Level.Name);
             background.color = color;
         }
     }

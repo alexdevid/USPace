@@ -2,7 +2,7 @@
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-namespace Game.Component.SceneController
+namespace Game.Component.Scene
 {
     public class OptionsController : AbstractSceneController
     {

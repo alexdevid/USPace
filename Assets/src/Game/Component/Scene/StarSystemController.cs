@@ -1,13 +1,12 @@
 ﻿using System;
-using Factory;
-using Model.Space;
-using Game.Service.Space;
+using Game.Model.Space;
+using Game.Service;
 using Network.DataTransfer.StarSystem;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-namespace Game.Component.SceneController
+namespace Game.Component.Scene
 {
     public class StarSystemController : AbstractSceneController
     {
