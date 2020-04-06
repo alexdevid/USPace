@@ -5,6 +5,10 @@ using Game.Model.Space;
 using Network;
 using UnityEngine;
 
+public enum GameMode
+{
+    Dev, Prod
+}
 public class GameController
 {
     private const string TokenStorageKey = "_user_token";
@@ -26,6 +30,7 @@ public class GameController
     public static Player Player => _app._player;
     public static string Token => _app._token;
     public static bool IsLogged => _app._isLogged;
+    public static GameMode GameMode => GameMode.Dev;
 
     public static World World
     {

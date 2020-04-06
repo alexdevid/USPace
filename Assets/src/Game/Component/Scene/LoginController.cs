@@ -64,10 +64,10 @@ namespace Game.Component.Scene
                     color.a = 0.85f;
                     preloaderOverlay.GetComponent<Image>().color = color;
                 }
-            }, e => Debug.Log(e.Message));
+            }, e => throw e);
         }
 
-        private async void OnLoginClick()
+        private void OnLoginClick()
         {
             if (_loginRequestProcess) return;
 

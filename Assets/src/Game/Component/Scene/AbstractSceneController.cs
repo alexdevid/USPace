@@ -33,7 +33,12 @@ namespace Game.Component.Scene
         {
             if (type != LogType.Exception) return;
 
-            GameController.SystemError = $"{type}: {condition}\n{stackTrace}";
+            GameController.SystemError = $"{type}: {condition}\n";
+            if (GameController.GameMode == GameMode.Dev)
+            {
+                GameController.SystemError += stackTrace;
+            }
+            
             SceneManager.LoadScene(SceneError);
         }
     }
