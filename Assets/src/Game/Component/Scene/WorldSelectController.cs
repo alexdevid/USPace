@@ -14,6 +14,8 @@ namespace Game.Component.Scene
         public Button playButton;
         public Transform worldSelectorsContainer;
         public GameObject worldSelector;
+        public Text username;
+        public Button logoutButton;
 
         private int _lastPlayedWorldId;
         private World _selectedWorld;
@@ -21,9 +23,12 @@ namespace Game.Component.Scene
 
         private void Start()
         {
+            username.text = GameController.Player.Username;
+            
             backButton.onClick.AddListener(OnBackClick);
             playButton.onClick.AddListener(OnPlayClick);
             playButton.onClick.AddListener(OnPlayClick);
+            logoutButton.onClick.AddListener(OnLogout);
 
             _lastPlayedWorldId = GameController.LastPlayedWorldId;
             
@@ -54,6 +59,12 @@ namespace Game.Component.Scene
 
         private static void OnBackClick()
         {
+            SceneManager.LoadScene(SceneMainMenu);
+        }
+
+        private static void OnLogout()
+        {
+            GameController.Logout();
             SceneManager.LoadScene(SceneMainMenu);
         }
 
