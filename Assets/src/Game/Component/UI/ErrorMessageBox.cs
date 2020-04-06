@@ -20,12 +20,12 @@ namespace Game.Component.UI
         
         public void Show()
         {
-            gameObject.GetComponent<CanvasGroup>().alpha = 1;
+            gameObject.SetActive(true);
         }
         
         public void Hide()
         {
-            gameObject.GetComponent<CanvasGroup>().alpha = 0;
+            gameObject.SetActive(false);
         }
     }
 }

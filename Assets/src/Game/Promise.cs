@@ -1,34 +1,53 @@
 ﻿using System;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Game
 {
-    //lalala
-    public class Promise : Task
+    public class Promise
     {
-        public Promise(Action action) : base(action)
+        private readonly UnityEvent _onFinish = new UnityEvent();
+        private readonly UnityEvent _onException = new UnityEvent();
+
+        private readonly UnityAction _action;
+        
+        public Promise(UnityAction action)
         {
-            Promise p = new Promise(() =>
+            _action = action;
+            Run();
+        }
+
+        public Promise Then(UnityAction action)
+        {
+            _onFinish.AddListener(action);
+
+            return this;
+        }
+
+        public Promise Catch(UnityAction action)
+        {
+            _onException.AddListener(action);
+
+            return this;
+        }
+        
+        private Task<bool> Run()
+        {
+            return Task.Run(() =>
             {
-                Debug.Log("Go");
-            }).Then(response =>
-            {
-                Debug.Log("response: " + response);
-            }).Catch(e =>
-            {
-                Debug.Log("Error: " + e.Message);
+                try
+                {
+                    _action.Invoke();
+                    _onFinish.Invoke();
+                }
+                catch (Exception e)
+                {
+                    _onException.Invoke();
+                }
+
+                return true;
             });
-        }
-
-        public Promise Then(Action<string> action)
-        {
-            return this;
-        }
-
-        public Promise Catch(Action<Exception> action)
-        {
-            return this;
         }
     }
 }

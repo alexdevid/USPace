@@ -44,7 +44,6 @@ using System.Text;
                 {
                     _clientSocket.Connect(new IPEndPoint(ip, 8080));
                     _connected = true;
-                    Debug.Log("PROXY CONNECTED...................");
                     OnConnected.Invoke();
                 
                     return $"Socket connected to {_clientSocket.RemoteEndPoint}";

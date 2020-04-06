@@ -1,4 +1,6 @@
-﻿using Model;
+﻿using System;
+using Game.Component;
+using Model;
 using Model.Space;
 using Network;
 using UnityEngine;
@@ -8,6 +10,7 @@ public class GameController
     private const string TokenStorageKey = "_user_token";
     private const string LastPlayedLevelStorageKey = "_user_last_played_level";
     private static GameController _app = new GameController();
+    private MainThreadWorker _worker;
 
     private Player _player;
     private Level _level;
@@ -69,6 +72,18 @@ public class GameController
         }
     }
 
+    public static MainThreadWorker AddTask(Action action)
+    {
+        if (App._worker == null)
+        {
+            App.CreateWorker();
+        }
+        
+        App._worker.AddTask(action);
+            
+        return App._worker;
+    }
+
     public static void SetPlayer(Player player)
     {
         App._isLogged = true;
@@ -90,6 +105,12 @@ public class GameController
         if (App._client.IsConnected()) App._client.Disconnect();
 
         Application.Quit();
+    }
+
+    private void CreateWorker()
+    {
+        GameObject worker = new GameObject("_worker");
+        _worker = worker.AddComponent<MainThreadWorker>();
     }
     
     private GameController()

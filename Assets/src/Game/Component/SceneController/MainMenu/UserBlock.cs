@@ -24,15 +24,15 @@ namespace Game.Component.SceneController.MainMenu
             logoutButton.onClick.AddListener(OnLogoutClick);
             connectRetryButton.onClick.AddListener(async () => await TryConnect());
             
-            Hide();
-            if (!string.IsNullOrEmpty(GameController.Token))
-            {
-                _jobs.Enqueue(async () => await TryConnect());
-            }
-            else
-            {
-                _jobs.Enqueue(async () => await CheckConnection());
-            }
+            // Hide();
+            // if (!string.IsNullOrEmpty(GameController.Token))
+            // {
+            //     _jobs.Enqueue(async () => await TryConnect());
+            // }
+            // else
+            // {
+            //     _jobs.Enqueue(async () => await CheckConnection());
+            // }
         }
 
         private void Update()
