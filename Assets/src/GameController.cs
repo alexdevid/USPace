@@ -4,6 +4,7 @@ using Model;
 using Model.Space;
 using Network;
 using UnityEngine;
+using Object = System.Object;
 
 public class GameController
 {
@@ -111,6 +112,7 @@ public class GameController
     {
         GameObject worker = new GameObject("_worker");
         _worker = worker.AddComponent<MainThreadWorker>();
+        GameObject.DontDestroyOnLoad(worker);
     }
     
     private GameController()

@@ -1,8 +1,8 @@
 ﻿using System;
 using Factory;
 using Model.Space;
+using Game.Service.Space;
 using Network.DataTransfer.StarSystem;
-using Service.Space;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -38,35 +38,24 @@ namespace Game.Component.SceneController
             LoadAndRenderSystem();
         }
 
-        private async void LoadAndRenderSystem()
+        private void LoadAndRenderSystem()
         {
-            try
+            StarSystemService.Get(2, system =>
             {
-                GameController.StarSystem = await StarSystemService.GetSystem(2);
+                GameController.StarSystem = system ?? StarSystem.CreateFromDTO(new StarSystemResponse());
                 preloaderOverlay.SetActive(false);
-            }
-            catch (Exception e)
-            {
-                if (e.Message == "DomainObjectNotFoundException")
+                GameController.StarSystem.Objects.ForEach(spaceObject =>
                 {
-                    GameController.StarSystem = StarSystem.CreateFromDTO(new StarSystemResponse());
-                    preloaderOverlay.SetActive(false);
-                }
-                else
-                {
-                    GameController.Error = "OOPs!.\n" +
-                                           "Something went wrong. \n" +
-                                           $"System could not be loaded {GameController.CurrentSystemId}\n" +
-                                           e.Message;
-
-                    throw;
-                }
-            }
-            
-
-            GameController.StarSystem.Objects.ForEach(spaceObject =>
+                    //GameObject go = SpaceObjectFactory.Generate(spaceObject);
+                });
+            }, e =>
             {
-                GameObject go = SpaceObjectFactory.Generate(spaceObject);
+                GameController.Error = "OOPs!.\n" +
+                                       "Something went wrong. \n" +
+                                       $"System could not be loaded {GameController.CurrentSystemId}\n" +
+                                       e.Message;
+
+                throw e;
             });
         }
 

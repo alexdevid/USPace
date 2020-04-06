@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Model;
 using Network.DataTransfer;
 using Network.DataTransfer.Security;
@@ -21,32 +20,23 @@ namespace Network
             WrongCredentials,
             Error
         }
-
-        public static async Task<AuthStatus> Auth()
+        
+        public static void Auth(Action<AuthStatus> callback, Action<Exception> error)
         {
-            // if (string.IsNullOrEmpty(GameController.Token))
-            // {
-            //     return AuthStatus.InvalidToken;
-            // }
-            //
-            // if (GameController.IsLogged)
-            // {
-            //     return AuthStatus.Success;
-            // }
-
             Request<AuthRequest> request = new Request<AuthRequest>(AuthMethod, new AuthRequest(GameController.Token));
-            string json = await request.Send();
-
-            return AuthorizeUser(json);
+            request.Then(json =>
+            {
+                callback.Invoke(AuthorizeUser(json));
+            }).Catch(error.Invoke);
         }
 
-        public static async Task<AuthStatus> Login(string username, string password)
+        public static void Login(LoginRequest data, Action<AuthStatus> callback, Action<Exception> error)
         {
-            LoginRequest data = new LoginRequest(username, password);
             Request<LoginRequest> request = new Request<LoginRequest>(LoginMethod, data);
-            string json = await request.Send();
-
-            return AuthorizeUser(json);
+            request.Then(json =>
+            {
+                callback.Invoke(AuthorizeUser(json));
+            }).Catch(error.Invoke);
         }
 
         private static AuthStatus AuthorizeUser(string response)

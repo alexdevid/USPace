@@ -18,16 +18,6 @@ namespace Game.Component.SceneController
             optionsButton.onClick.AddListener(OnSettingsClick);
             exitButton.onClick.AddListener(OnExitClick);
             playButton.gameObject.SetActive(true);
-
-            new LevelRequest()
-                .Then(level =>
-                {
-                    Debug.Log("Name: " + level.Name);
-                    playButton.gameObject.SetActive(false);
-                        
-                })
-                .Catch(e => { Debug.Log(e.Message); });
-            Debug.Log("before name");
         }
 
         private static void OnStartClick()

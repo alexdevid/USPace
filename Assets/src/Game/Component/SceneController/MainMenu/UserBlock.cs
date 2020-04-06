@@ -21,18 +21,11 @@ namespace Game.Component.SceneController.MainMenu
 
         private void Start()
         {
+            Hide();
             logoutButton.onClick.AddListener(OnLogoutClick);
-            connectRetryButton.onClick.AddListener(async () => await TryConnect());
+            connectRetryButton.onClick.AddListener(TryConnect);
             
-            // Hide();
-            // if (!string.IsNullOrEmpty(GameController.Token))
-            // {
-            //     _jobs.Enqueue(async () => await TryConnect());
-            // }
-            // else
-            // {
-            //     _jobs.Enqueue(async () => await CheckConnection());
-            // }
+            TryConnect();
         }
 
         private void Update()
@@ -82,25 +75,21 @@ namespace Game.Component.SceneController.MainMenu
             }
         }
         
-        private async Task TryConnect()
+        private void TryConnect()
         {
             ShowLoader();
-            try
+            Authenticator.Auth(status =>
             {
-                Authenticator.AuthStatus status = await Authenticator.Auth();
                 if (status == Authenticator.AuthStatus.Success)
                     OnLoginSuccess();
-                else
-                {
-                    Hide();
-                    Debug.Log(status);
-                }
-            }
-            catch (Exception e)
+                else Debug.Log(status);
+            }, error =>
             {
+                Hide();
+                Debug.Log(error.Message);
                 ShowError("Could not connect to server.\nPlease check your internet connection and try again");
                 connectRetryButton.gameObject.SetActive(true);
-            }
+            });
         }
 
         private void ShowError(string message)

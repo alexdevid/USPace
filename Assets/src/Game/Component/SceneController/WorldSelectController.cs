@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Model;
-using Network.Service;
+using Game.Service;
 using UI.General;
 using UI.SinglePlayer;
 using UnityEngine;
@@ -40,22 +38,7 @@ namespace Game.Component.SceneController
 
             _lastPlayedLevelId = GameController.LastPlayedLevelId;
             
-            HandleSelectors();
-        }
-
-        private async void HandleSelectors()
-        {
-            await CreateLevelSelectors();
-
-            LevelSelector selected = _levelSelectors.Find(selector => selector.Level.Id == _lastPlayedLevelId);
-            if (selected != null)
-            {
-                //TODO render after sort
-                _levelSelectors.OrderBy(selector => selector.Level.Id == _lastPlayedLevelId);
-                
-                selected.SetSelected(true);
-                _selectedLevel = selected.Level;
-            }
+            CreateLevelSelectors();
         }
 
         private void OnGUI()
@@ -86,23 +69,42 @@ namespace Game.Component.SceneController
             SceneManager.LoadScene(SceneMainMenu);
         }
 
-        private async Task CreateLevelSelectors()
+        private void CreateLevelSelectors()
         {
-            List<Level> levels = await World.GetLevels();
-
-            foreach (Level level in levels)
+            LevelService.GetAll(levels =>
             {
-                GameObject levelObject = Instantiate(levelSelector, levelContainer);
-                LevelSelector levelSelectorComponent = levelObject.GetComponent<LevelSelector>();
-                levelSelectorComponent.Level = level;
-                levelSelectorComponent.MouseClickEvent.AddListener(() => OnLevelSelected(levelSelectorComponent));
-                levelSelectorComponent.MouseDoubleClickEvent.AddListener(() =>
+                foreach (Level level in levels)
                 {
-                    OnLevelSelected(levelSelectorComponent);
-                    OnPlayClick();
-                });
+                    CreateSelector(level);
+                }
 
-                _levelSelectors.Add(levelSelectorComponent);
+                SelectActiveLevel();
+            }, e => throw e);
+        }
+
+        private void CreateSelector(Level level)
+        {
+            GameObject levelObject = Instantiate(levelSelector, levelContainer);
+            LevelSelector levelSelectorComponent = levelObject.GetComponent<LevelSelector>();
+            levelSelectorComponent.Level = level;
+            levelSelectorComponent.MouseClickEvent.AddListener(() => OnLevelSelected(levelSelectorComponent));
+            levelSelectorComponent.MouseDoubleClickEvent.AddListener(() =>
+            {
+                OnLevelSelected(levelSelectorComponent);
+                OnPlayClick();
+            });
+
+            _levelSelectors.Add(levelSelectorComponent);
+        }
+
+        private void SelectActiveLevel()
+        {
+            LevelSelector selected = _levelSelectors.Find(selector => selector.Level.Id == _lastPlayedLevelId);
+            if (selected != null)
+            {
+                //TODO render after sort
+                selected.SetSelected(true);
+                _selectedLevel = selected.Level;
             }
         }
     }

@@ -1,4 +1,5 @@
 ﻿using Network;
+using Network.DataTransfer.Security;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -53,15 +54,17 @@ namespace Game.Component.SceneController
 
         private async void Authorize()
         {
-            Authenticator.AuthStatus status = await Authenticator.Auth();
-            if (status == Authenticator.AuthStatus.Success) SceneManager.LoadScene(SceneWorldSelect);
-            else
+            Authenticator.Auth(status =>
             {
-                preloaderOverlay.SetActive(false);
-                Color color = Color.black;
-                color.a = 0.85f;
-                preloaderOverlay.GetComponent<Image>().color = color;
-            }
+                if (status == Authenticator.AuthStatus.Success) SceneManager.LoadScene(SceneWorldSelect);
+                else
+                {
+                    preloaderOverlay.SetActive(false);
+                    Color color = Color.black;
+                    color.a = 0.85f;
+                    preloaderOverlay.GetComponent<Image>().color = color;
+                }
+            }, e => Debug.Log(e.Message));
         }
 
         private async void OnLoginClick()
@@ -73,23 +76,29 @@ namespace Game.Component.SceneController
             errorText.text = string.Empty;
             preloaderOverlay.SetActive(true);
 
-            Authenticator.AuthStatus status = await Authenticator.Login(username.text, password.text);
-            _loginRequestProcess = false;
-
-            switch (status)
+            Authenticator.Login(new LoginRequest(username.text, password.text), status =>
             {
-                case Authenticator.AuthStatus.Success:
-                    SceneManager.LoadScene(SceneWorldSelect);
-                    break;
-                case Authenticator.AuthStatus.WrongCredentials:
-                    preloaderOverlay.SetActive(false);
-                    errorText.text = "Wrong credentials";
-                    break;
-                default:
-                    preloaderOverlay.SetActive(false);
-                    errorText.text = "Unknown error happened";
-                    break;
-            }
+                switch (status)
+                {
+                    case Authenticator.AuthStatus.Success:
+                        SceneManager.LoadScene(SceneWorldSelect);
+                        break;
+                    case Authenticator.AuthStatus.WrongCredentials:
+                        preloaderOverlay.SetActive(false);
+                        errorText.text = "Wrong credentials";
+                        break;
+                    default:
+                        preloaderOverlay.SetActive(false);
+                        errorText.text = "Unknown error happened";
+                        break;
+                }
+
+                _loginRequestProcess = false;
+            }, e =>
+            {
+                Debug.Log(e.Message);
+                _loginRequestProcess = false;
+            });
         }
 
         private static void OnBackClick()

@@ -1,33 +1,23 @@
 ﻿using System;
-using System.Threading.Tasks;
-using Model.Space;
 using Network.DataTransfer;
 using Network.DataTransfer.StarSystem;
 using UnityEngine;
 
-namespace Service.Space
+namespace Game.Service.Space
 {
     public static class StarSystemService
     {
-        private const string MethodGet = "system.get";
+        private const string GetMethod = "system.get";
         
-        public static async Task<StarSystem> GetSystem(int id)
+        public static void Get(int id, Action<Model.Space.StarSystem> callback, Action<Exception> error)
         {
-            StarSystem system = await LoadStarSystem(id);
-            
-            return system;
-        }
-
-        private static async Task<StarSystem> LoadStarSystem(int id)
-        {
-            Request<StarSystemGetRequest> request = new Request<StarSystemGetRequest>(MethodGet, new StarSystemGetRequest(id));
-            StarSystemResponse response = JsonUtility.FromJson<StarSystemResponse>(await request.Send());
-            if (response.error != null)
+            Request<StarSystemGetRequest> request = new Request<StarSystemGetRequest>(GetMethod, new StarSystemGetRequest(id));
+            request.Then(json =>
             {
-                throw new Exception(response.error);
-            }
-            
-            return response.CreateModel();
+                StarSystemResponse response = JsonUtility.FromJson<StarSystemResponse>(json);
+                Model.Space.StarSystem system = Model.Space.StarSystem.CreateFromDTO(response);
+                callback.Invoke(system);
+            }).Catch(error.Invoke);
         }
     }
 }
