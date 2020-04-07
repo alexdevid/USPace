@@ -8,7 +8,7 @@ namespace Model
         public int Id { get; private set; }
         public string Name { get; private set; }
         public long CreatedAt { get; private set; }
-        public long Seed { get; private set; }
+        public int Seed { get; private set; }
         public int TotalSystems { get; private set; }
         public int MaxPlayers { get; private set; }
         public int CurrentPlayers { get; private set; }

@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using Game.Generator;
+using Game.Model;
 using Model;
 using Network.DataTransfer;
 using Network.DataTransfer.World;
@@ -11,6 +14,16 @@ namespace Service
     {
         private const string GetMethod = "world.get";
         private const string ListMethod = "world.list";
+        private const string PopulationMethod = "world.population";
+
+        public static void GetPopulationDensity(Action<PopulationDensityResponse> callback, Action<Exception> error)
+        {
+            Request<object>.Empty(PopulationMethod).Then(response =>
+            {
+                string json = "{\"density\":[39,12,54,43,123,95,19,33,78]}";
+                callback.Invoke(JsonUtility.FromJson<PopulationDensityResponse>(json));
+            }).Catch(error.Invoke);
+        }
 
         public static void Get(int id, Action<World> callback, Action<Exception> error)
         {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Network.DataTransfer.StarSystem;
 using UnityEngine;
 
-namespace Game.Model.Space
+namespace Game.Model
 {
     public enum StarSystemSize
     {
@@ -31,6 +31,7 @@ namespace Game.Model.Space
         
         public int Id { get; private set; }
         public int Seed { get; private set; }
+        public int Sector { get; private set; }
         public long CreatedAt { get; private set; }
         public string Name { get; private set; }
         public Vector2 Location { get; private set; } = Vector2.zero;
@@ -38,6 +39,19 @@ namespace Game.Model.Space
         public StarSystemSize Size { get; private set; } = StarSystemSize.Medium;
         
         public List<SpaceObject> Objects { get; } = new List<SpaceObject>();
+
+        public StarSystem(int sector, Vector2 location, StarSystemType type, StarSystemSize size)
+        {
+            Name = GenerateName(location);
+            Sector = sector;
+            Location = location;
+            Type = type;
+            Size = size;
+            Owner = GameController.Player.Username;
+            CreatedAt = (int) (DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+            DiscoveredAt = CreatedAt;
+            DiscoveredBy = Owner;
+        }
 
         public StarSystem()
         {
@@ -86,6 +100,7 @@ namespace Game.Model.Space
                 
                 Id = response.id,
                 Seed = response.seed,
+                Sector = response.sector,
                 CreatedAt = response.created_at,
                 Name = response.name,
                 Location = new Vector2(response.position_x, response.position_y),

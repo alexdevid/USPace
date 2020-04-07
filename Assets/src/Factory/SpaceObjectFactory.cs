@@ -1,5 +1,5 @@
 ﻿using System;
-using Game.Model.Space;
+using Game.Model;
 using UnityEngine;
 
 namespace Factory

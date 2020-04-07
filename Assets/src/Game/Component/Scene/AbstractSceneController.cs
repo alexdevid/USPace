@@ -11,6 +11,7 @@ namespace Game.Component.Scene
         protected const string SceneLogin = "login";
         protected const string SceneWorldSelect = "world_select";
         protected const string SceneStarSystem = "star_system";
+        protected const string SceneSectorSelect = "sector_select";
         protected const string SceneError = "error";
 
         private ArrayList SecureScenes { get; } = new ArrayList

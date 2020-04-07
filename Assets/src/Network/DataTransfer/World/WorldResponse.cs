@@ -8,10 +8,13 @@ namespace Network.DataTransfer.World
         public int id;
         public string name;
         public long created_at;
-        public long seed;
+        public int seed;
         public int status;
         public int systems_total;
         public int max_players;
         public int current_players;
+        
+        public int total_players;
+        public int star_systems_count;
     }
 }

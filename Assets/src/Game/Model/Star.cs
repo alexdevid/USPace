@@ -1,7 +1,7 @@
-﻿using Game.Model.Space.Dictionary;
+﻿using Game.Model.Dictionary;
 using UnityEngine;
 
-namespace Game.Model.Space
+namespace Game.Model
 {
     public class Star : SpaceObject
     {

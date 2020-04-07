@@ -1,7 +1,7 @@
 ﻿using System;
 using Game.Component;
 using Model;
-using Game.Model.Space;
+using Game.Model;
 using Network;
 using UnityEngine;
 

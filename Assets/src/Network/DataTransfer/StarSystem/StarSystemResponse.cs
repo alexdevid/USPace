@@ -13,6 +13,7 @@ namespace Network.DataTransfer.StarSystem
         public float speed;
 
         public int seed;
+        public int sector;
         public string size;
         public int created_at;
         public int discovered_at;
@@ -20,9 +21,9 @@ namespace Network.DataTransfer.StarSystem
         public string owner;
         public string discovered_by;
 
-        public Game.Model.Space.StarSystem CreateModel()
+        public Game.Model.StarSystem CreateModel()
         {
-            return Game.Model.Space.StarSystem.CreateFromDTO(this);
+            return Game.Model.StarSystem.CreateFromDTO(this);
         }
     }
 }

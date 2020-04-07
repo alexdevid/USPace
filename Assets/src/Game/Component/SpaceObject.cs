@@ -4,7 +4,7 @@ namespace Game.Component
 {
     public abstract class SpaceObject : MonoBehaviour
     {
-        public Model.Space.SpaceObject Model { get; set; }
+        public Model.SpaceObject Model { get; set; }
         
         protected void Update()
         {

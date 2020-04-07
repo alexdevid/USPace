@@ -1,7 +1,5 @@
 ﻿using System;
-using Game.Model.Space;
-using Game.Service;
-using Network.DataTransfer.StarSystem;
+using Game.Component.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -14,7 +12,7 @@ namespace Game.Component.Scene
         public Button closeMenuButton;
         public Button exitButton;
         public GameObject menuPanel;
-        public GameObject preloaderOverlay;
+        public PreloaderOverlay preloaderOverlay;
 
         public const float GameScreenSize = 10000;
         private CameraDrag _cameraDrag;
@@ -26,36 +24,23 @@ namespace Game.Component.Scene
 
         private void Start()
         {
-            preloaderOverlay.SetActive(true);
+            preloaderOverlay.Show();
             if (Camera.main == null) throw new Exception("Add `MainCamera` tag to main camera");
             _cameraDrag = Camera.main.GetComponent<CameraDrag>();
 
             menuButton.onClick.AddListener(ToggleMenuOverlay);
             closeMenuButton.onClick.AddListener(ToggleMenuOverlay);
             exitButton.onClick.AddListener(OnExitButtonClick);
-
+            
             LoadAndRenderSystem();
         }
 
         private void LoadAndRenderSystem()
         {
-            StarSystemService.Get(2, system =>
-            {
-                GameController.StarSystem = system ?? StarSystem.CreateFromDTO(new StarSystemResponse());
-                preloaderOverlay.SetActive(false);
-                GameController.StarSystem.Objects.ForEach(spaceObject =>
-                {
-                    //GameObject go = SpaceObjectFactory.Generate(spaceObject);
-                });
-            }, e =>
-            {
-                GameController.Error = "OOPs!.\n" +
-                                       "Something went wrong. \n" +
-                                       $"System could not be loaded {GameController.CurrentSystemId}\n" +
-                                       e.Message;
-
-                throw e;
-            });
+            preloaderOverlay.Hide();
+            
+            Debug.Log(GameController.StarSystem.Id);
+            Debug.Log(GameController.StarSystem.Name);
         }
 
         private static void OnExitButtonClick()

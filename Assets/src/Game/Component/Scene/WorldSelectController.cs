@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Game.Component.Scene.WorldSelect;
 using Model;
 using Service;
@@ -27,7 +28,6 @@ namespace Game.Component.Scene
             
             backButton.onClick.AddListener(OnBackClick);
             playButton.onClick.AddListener(OnPlayClick);
-            playButton.onClick.AddListener(OnPlayClick);
             logoutButton.onClick.AddListener(OnLogout);
 
             _lastPlayedWorldId = GameController.LastPlayedWorldId;
@@ -52,11 +52,16 @@ namespace Game.Component.Scene
         {
             GameController.World = _selectedWorld;
             GameController.LastPlayedWorldId = _selectedWorld.Id;
-            GameController.CurrentSystemId = GameController.Player.HomeSystemId;
+            if (GameController.Player.HomeSystemId == 0)
+            {
+                SceneManager.LoadScene(SceneSectorSelect);
+                return;
+            }
 
+            GameController.CurrentSystemId = GameController.Player.HomeSystemId;
             SceneManager.LoadScene(SceneStarSystem);
         }
-
+        
         private static void OnBackClick()
         {
             SceneManager.LoadScene(SceneMainMenu);
